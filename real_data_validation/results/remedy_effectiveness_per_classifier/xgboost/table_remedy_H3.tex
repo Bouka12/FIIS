@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{Remedy effectiveness for xgboost — H3: Balance/Overbalance. Averaged across 30 CV runs. Friedman: $\chi^2_F = 13.581$, $p = 0.0185$. CD$=2.274$ ($\alpha=0.05$). Average rank (lower = better).}
+\label{tab:remedy_xgboost_h3}
+\small
+\begin{tabular}{lrr}
+\toprule
+\textbf{Remedy} & \textbf{Avg.\ Rank} & \textbf{G-mean} \\
+\midrule
+    Threshold Corr. & 2.000 & $0.9567 \pm 0.0334$ \\
+    Borderline SMOTE & 3.409 & $0.9446 \pm 0.0509$ \\
+    SMOTE & 3.455 & $0.9477 \pm 0.0447$ \\
+    Class Weighting & 3.727 & $0.9446 \pm 0.0499$ \\
+    ROS & 3.909 & $0.9446 \pm 0.0472$ \\
+    No Correction & 4.500 & $0.9415 \pm 0.0514$ \\
+\midrule
+\multicolumn{3}{l}{\footnotesize Friedman: $\chi^2_F=13.581$, $p = 0.0185$, CD$=2.274$} \\
+\bottomrule
+\end{tabular}
+\end{table}

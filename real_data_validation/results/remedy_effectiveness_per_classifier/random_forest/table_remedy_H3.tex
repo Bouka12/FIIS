@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{Remedy effectiveness for random_forest — H3: Balance/Overbalance. Averaged across 30 CV runs. Friedman: $\chi^2_F = 19.132$, $p = 0.0018$. CD$=2.274$ ($\alpha=0.05$). Average rank (lower = better).}
+\label{tab:remedy_random_forest_h3}
+\small
+\begin{tabular}{lrr}
+\toprule
+\textbf{Remedy} & \textbf{Avg.\ Rank} & \textbf{G-mean} \\
+\midrule
+    Threshold Corr. & 2.318 & $0.9682 \pm 0.0326$ \\
+    SMOTE & 2.364 & $0.9640 \pm 0.0369$ \\
+    ROS & 3.364 & $0.9571 \pm 0.0474$ \\
+    No Correction & 4.000 & $0.9509 \pm 0.0449$ \\
+    Borderline SMOTE & 4.318 & $0.9491 \pm 0.0475$ \\
+    Class Weighting & 4.636 & $0.9421 \pm 0.0562$ \\
+\midrule
+\multicolumn{3}{l}{\footnotesize Friedman: $\chi^2_F=19.132$, $p = 0.0018$, CD$=2.274$} \\
+\bottomrule
+\end{tabular}
+\end{table}

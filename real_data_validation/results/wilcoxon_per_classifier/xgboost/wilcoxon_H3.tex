@@ -1,0 +1,27 @@
+\begin{table}[ht]
+\centering
+\scriptsize
+\caption{Pairwise Wilcoxon signed-rank tests for xgboost --- H3: Balance/Overbalance ($n=11$ datasets). $p$: nominal; $p_B$: Bonferroni-corrected ($\alpha_B=0.0033$). $r$: rank-biserial effect size. $\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). $\ast$: $p<0.05$; $\ast\ast$: $p_B<0.05$.}
+\label{tab:wilcoxon_xgboost_h3}
+\begin{tabular}{llrrrrl}
+\toprule
+\textbf{Remedy 1} & \textbf{Remedy 2} & \textbf{$p$} & \textbf{$p_B$} & \textbf{$\Delta$} & \textbf{$r$} & \textbf{Sig.} \\\\
+\midrule
+    No Correction & Threshold Corr. & 0.0039 & 0.0586 & -0.0152 & 0.885 & $\ast$ \\
+    No Correction & ROS & 0.2500 & 1.0000 & -0.0031 & 0.563 & --- \\
+    No Correction & SMOTE & 0.0391 & 0.5859 & -0.0061 & 0.751 & $\ast$ \\
+    No Correction & Borderline SMOTE & 0.0391 & 0.5859 & -0.0031 & 0.804 & $\ast$ \\
+    No Correction & Class Weighting & 0.2500 & 1.0000 & -0.0031 & 0.563 & --- \\
+    Threshold Corr. & ROS & 0.0195 & 0.2930 & +0.0121 & 0.804 & $\ast$ \\
+    Threshold Corr. & SMOTE & 0.0273 & 0.4102 & +0.0091 & 0.777 & $\ast$ \\
+    Threshold Corr. & Borderline SMOTE & 0.0273 & 0.4102 & +0.0122 & 0.777 & $\ast$ \\
+    Threshold Corr. & Class Weighting & 0.0117 & 0.1758 & +0.0121 & 0.831 & $\ast$ \\
+    ROS & SMOTE & 0.1953 & 1.0000 & -0.0031 & 0.670 & --- \\
+    ROS & Borderline SMOTE & 0.8203 & 1.0000 & +0.0000 & 0.348 & --- \\
+    ROS & Class Weighting & 0.6406 & 1.0000 & -0.0000 & 0.509 & --- \\
+    SMOTE & Borderline SMOTE & 0.8398 & 1.0000 & +0.0031 & 0.335 & --- \\
+    SMOTE & Class Weighting & 0.4609 & 1.0000 & +0.0030 & 0.563 & --- \\
+    Borderline SMOTE & Class Weighting & 0.8203 & 1.0000 & -0.0000 & 0.348 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}

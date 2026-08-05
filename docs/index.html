@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIIS — Supplementary Materials</title>
+<style>
+  :root {
+    --bg:       #0f1117;
+    --surface:  #181c27;
+    --border:   #262c3e;
+    --accent:   #6c8cff;
+    --accent2:  #c55d08;
+    --green:    #2e7d32;
+    --purple:   #623991;
+    --text:     #e2e6f0;
+    --muted:    #8892a4;
+    --mono:     'JetBrains Mono', 'Fira Mono', monospace;
+    --sans:     'Inter', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(15,17,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem;
+    height: 56px;
+  }
+  nav .logo {
+    font-weight: 700; font-size: 1rem;
+    color: var(--accent); letter-spacing: .04em;
+    white-space: nowrap;
+  }
+  nav a {
+    color: var(--muted); text-decoration: none;
+    font-size: .85rem; transition: color .2s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--text); }
+
+  /* ── Hero ── */
+  .hero {
+    max-width: 860px; margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+  }
+  .hero .tag {
+    display: inline-block;
+    background: rgba(108,140,255,.12);
+    color: var(--accent); border: 1px solid rgba(108,140,255,.25);
+    border-radius: 20px; padding: .25rem .9rem;
+    font-size: .78rem; letter-spacing: .06em;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: clamp(1.6rem,3vw,2.4rem);
+    font-weight: 700; line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero .authors {
+    color: var(--muted); font-size: .9rem;
+    margin-bottom: .5rem;
+  }
+  .hero .affiliations {
+    color: var(--muted); font-size: .82rem;
+    margin-bottom: 2rem;
+  }
+  .hero .desc {
+    font-size: .95rem; color: #c0c8d8;
+    max-width: 720px; margin-bottom: 2rem;
+  }
+  .badges { display: flex; gap: .75rem; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: .4rem .9rem;
+    font-size: .82rem; color: var(--muted);
+    text-decoration: none; transition: border-color .2s, color .2s;
+  }
+  .badge:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ── Stats row ── */
+  .stats {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem;
+  }
+  .stats-inner {
+    max-width: 860px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+    gap: 1.5rem; text-align: center;
+  }
+  .stat-val {
+    font-size: 2rem; font-weight: 700;
+    color: var(--accent); line-height: 1;
+    margin-bottom: .25rem;
+  }
+  .stat-lbl { font-size: .78rem; color: var(--muted); }
+
+  /* ── Sections ── */
+  .section {
+    max-width: 960px; margin: 0 auto;
+    padding: 4rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header {
+    display: flex; align-items: baseline;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .section-num {
+    font-size: .75rem; color: var(--accent);
+    font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .section h2 {
+    font-size: 1.4rem; font-weight: 600;
+  }
+  .section p {
+    color: #c0c8d8; font-size: .9rem;
+    margin-bottom: 1rem; max-width: 720px;
+  }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); border-radius: 8px;
+    padding: .4rem 1rem; font-size: .82rem;
+    cursor: pointer; transition: all .2s;
+  }
+  .tab.active {
+    background: rgba(108,140,255,.15);
+    border-color: var(--accent); color: var(--accent);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Tables ── */
+  .tbl-wrap {
+    overflow-x: auto; border-radius: 10px;
+    border: 1px solid var(--border);
+    max-height: 480px; overflow-y: auto;
+  }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: .8rem; font-family: var(--mono);
+  }
+  thead th {
+    background: #1e2336; color: var(--muted);
+    padding: .6rem .9rem; text-align: left;
+    font-size: .72rem; letter-spacing: .06em;
+    text-transform: uppercase; white-space: nowrap;
+    position: sticky; top: 0; z-index: 2;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr:nth-child(even) { background: rgba(255,255,255,.02); }
+  tbody td {
+    padding: .45rem .9rem;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    white-space: nowrap;
+  }
+  .arch-A { color: var(--purple); font-weight: 600; }
+  .arch-C { color: var(--accent2); font-weight: 600; }
+  .comp-D { color: #c62828; }
+  .comp-O { color: var(--green); }
+  .comp-B { color: var(--accent); }
+
+  /* ── Figures ── */
+  .fig-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap: 1.25rem; margin-top: 1rem;
+  }
+  .fig-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .fig-card img {
+    width: 100%; display: block;
+    background: #fff;
+  }
+  .fig-cap {
+    padding: .75rem 1rem;
+    font-size: .78rem; color: var(--muted);
+  }
+
+  /* ── Downloads ── */
+  .dl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: .75rem; margin-top: 1rem;
+  }
+  .dl-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.25rem;
+    display: flex; align-items: center; gap: .75rem;
+    text-decoration: none; color: var(--text);
+    transition: border-color .2s;
+  }
+  .dl-card:hover { border-color: var(--accent); }
+  .dl-icon { font-size: 1.4rem; }
+  .dl-name { font-size: .85rem; font-weight: 500; }
+  .dl-desc { font-size: .75rem; color: var(--muted); }
+
+  /* ── Hypothesis chips ── */
+  .hyp-row { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .hyp-chip {
+    border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 500; cursor: pointer;
+    border: 1px solid transparent; transition: all .2s;
+  }
+  .hyp-chip[data-h="H1"] { background: rgba(98,57,145,.15); color: #a07ad0; border-color: rgba(98,57,145,.3); }
+  .hyp-chip[data-h="H2"] { background: rgba(197,93,8,.15); color: #e08040; border-color: rgba(197,93,8,.3); }
+  .hyp-chip[data-h="H3"] { background: rgba(46,125,50,.15); color: #5cb860; border-color: rgba(46,125,50,.3); }
+  .hyp-chip.active { opacity: 1; }
+  .hyp-chip:not(.active) { opacity: .5; }
+
+  /* ── Case study highlight ── */
+  .sig-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+    display: grid; grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
+    gap: 1rem; margin-bottom: 2rem; text-align: center;
+  }
+  .sig-val { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+  .sig-lbl { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+  .diagnosis-box {
+    display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;
+  }
+  .diag-chip {
+    border-radius: 10px; padding: .6rem 1.2rem;
+    font-size: .85rem; font-weight: 600;
+  }
+  .diag-arch { background: rgba(197,93,8,.18); color: #e08040; border: 1px solid rgba(197,93,8,.3); }
+  .diag-comp { background: rgba(198,40,40,.18); color: #ef5350; border: 1px solid rgba(198,40,40,.3); }
+  .diag-hyp  { background: rgba(108,140,255,.15); color: var(--accent); border: 1px solid rgba(108,140,255,.3); }
+
+  /* ── Search ── */
+  .search-wrap { margin-bottom: 1rem; }
+  .search-wrap input {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: .5rem 1rem;
+    color: var(--text); font-size: .85rem; width: 100%; max-width: 360px;
+    outline: none; transition: border-color .2s;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 3rem 2rem;
+    color: var(--muted); font-size: .8rem;
+    border-top: 1px solid var(--border);
+  }
+  .bibtex {
+    background: #12151e; border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.25rem 1.5rem;
+    font-family: var(--mono); font-size: .78rem;
+    color: #a8b4cc; text-align: left; white-space: pre;
+    overflow-x: auto; margin-top: 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <span class="logo">FIIS</span>
+  <a href="#overview">Overview</a>
+  <a href="#archetype">Archetype Discovery</a>
+  <a href="#remedy">Remedy Effectiveness</a>
+  <a href="#per-clf">Per-Classifier</a>
+  <a href="#case-study">Case Study</a>
+  <a href="#downloads">Downloads</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero" id="overview">
+  <div class="tag">Supplementary Materials</div>
+  <h1>Beyond Class Imbalance:<br><span>Fisher Information Diagnostic for Imbalance Remedy Selection</span></h1>
+  <p class="authors">Mabrouka Salmi &nbsp;·&nbsp; Dalia Atif &nbsp;·&nbsp; Sebastian Ventura</p>
+  <p class="affiliations">National High School of Statistics and Applied Economics, Algeria &nbsp;·&nbsp; University of Córdoba, Spain</p>
+  <p class="desc">
+    This page provides supplementary materials for the paper introducing the
+    <strong>Fisher Information Imbalance Signature (FIIS)</strong> — a principled
+    diagnostic framework that decomposes the Fisher information ratio
+    <em>R = R<sub>n</sub> · R<sub>p</sub> · R<sub>g</sub> · C</em>
+    into interpretable components, enabling hypothesis-driven remedy selection
+    for class imbalance. Materials include full experimental results,
+    per-dataset FIIS characterisations, per-classifier analyses, and a
+    medical diagnosis case study.
+  </p>
+  <div class="badges">
+    <a class="badge" href="#downloads">📦 Download Data</a>
+    <a class="badge" href="#archetype">📊 Archetype Results</a>
+    <a class="badge" href="#case-study">🏥 Case Study</a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stats-inner">
+    <div><div class="stat-val">94</div><div class="stat-lbl">Benchmark Datasets</div></div>
+    <div><div class="stat-val">6.6×</div><div class="stat-lbl">Median R / R<sub>n</sub> Gap</div></div>
+    <div><div class="stat-val">3</div><div class="stat-lbl">Classifiers</div></div>
+    <div><div class="stat-val">6</div><div class="stat-lbl">Remedy Strategies</div></div>
+    <div><div class="stat-val">30</div><div class="stat-lbl">CV Runs per Dataset</div></div>
+    <div><div class="stat-val">H1✓ H2~ H3✓</div><div class="stat-lbl">Hypothesis Status</div></div>
+  </div>
+</div>
+
+<!-- ── Archetype Discovery ── -->
+<div class="section" id="archetype">
+  <div class="section-header">
+    <span class="section-num">01 &mdash; RQ2</span>
+    <h2>Real Data Characterisation &amp; Archetype Discovery</h2>
+  </div>
+  <p>
+    FIIS components (R<sub>n</sub>, R<sub>p</sub>, R<sub>g</sub>, C, R) computed from
+    logistic regression on the original training data across 30 cross-validation folds.
+    Archetype assigned per fold based on the dominant compounding geometric component;
+    compensation regime based on whether R &lt; 1, |R−1| ≤ 0.05, or R &gt; 1.
+  </p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('arch','strip')">Strip Plots</div>
+    <div class="tab" onclick="switchTab('arch','table')">Archetype Table</div>
+  </div>
+
+  <div id="arch-strip" class="tab-content active">
+    <div class="fig-grid">
+      <div class="fig-card">
+        <img src="assets/plot_strip_archetype.png" alt="FIIS components coloured by archetype">
+        <div class="fig-cap">Geometric components (R<sub>p</sub>, R<sub>g</sub>, C) across 94 datasets, coloured by dominant archetype. Horizontal bar = median. Reference line at component = 1.</div>
+      </div>
+      <div class="fig-card">
+        <img src="assets/plot_strip_compensation.png" alt="FIIS components coloured by compensation regime">
+        <div class="fig-cap">Same components coloured by compensation regime (D: deficiency, O: overbalance, B: balance).</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="arch-table" class="tab-content">
+    <div class="search-wrap">
+      <input type="text" id="arch-search" placeholder="Search dataset..." oninput="filterTable('arch-tbl', this.value)">
+    </div>
+    <div class="tbl-wrap">
+      <table id="arch-tbl">
+        <thead>
+          <tr>
+            <th>Dataset</th><th>Source</th><th>IR</th>
+            <th>R<sub>n</sub></th><th>R<sub>p</sub></th><th>R<sub>g</sub></th>
+            <th>C</th><th>R</th><th>Archetype</th><th>Comp.</th>
+          </tr>
+        </thead>
+        <tbody id="arch-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── Remedy Effectiveness ── -->
+<div class="section" id="remedy">
+  <div class="section-header">
+    <span class="section-num">02 &mdash; RQ3</span>
+    <h2>Remedy Effectiveness on Real-World Datasets</h2>
+  </div>
+  <p>
+    G-mean averaged across three classifiers and 30 CV runs per (dataset, remedy).
+    Datasets grouped by FIIS diagnosis into three hypothesis groups.
+    Statistical comparison: Friedman test + Nemenyi post-hoc (α = 0.05),
+    pairwise Wilcoxon with Bonferroni correction (α<sub>B</sub> = 0.05/15).
+  </p>
+
+  <div class="hyp-row">
+    <div class="hyp-chip active" data-h="H1" onclick="selectHyp('H1')">
+      H1 · Archetype A + Deficiency · n = 59
+    </div>
+    <div class="hyp-chip active" data-h="H2" onclick="selectHyp('H2')">
+      H2 · Archetype C + Deficiency · n = 24
+    </div>
+    <div class="hyp-chip active" data-h="H3" onclick="selectHyp('H3')">
+      H3 · Balance / Overbalance · n = 11
+    </div>
+  </div>
+
+  <div class="fig-grid" id="cd-figs">
+    <div class="fig-card" data-h="H1">
+      <img src="assets/plot_cd_H1.png" alt="CD diagram H1">
+      <div class="fig-cap">H1 · Friedman χ²=215.39, p&lt;0.001 · 14/15 Wilcoxon pairs significant · <strong>H1 Confirmed</strong></div>
+    </div>
+    <div class="fig-card" data-h="H2">
+      <img src="assets/plot_cd_H2.png" alt="CD diagram H2">
+      <div class="fig-cap">H2 · Friedman χ²=98.19, p&lt;0.001 · 14/15 Wilcoxon pairs significant · <strong>H2 Partially Confirmed</strong></div>
+    </div>
+    <div class="fig-card" data-h="H3">
+      <img src="assets/plot_cd_H3.png" alt="CD diagram H3">
+      <div class="fig-cap">H3 · Friedman χ²=21.59, p&lt;0.001 · 0/15 Wilcoxon pairs significant (Bonferroni) · <strong>H3 Confirmed</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Per-Classifier ── -->
+<div class="section" id="per-clf">
+  <div class="section-header">
+    <span class="section-num">03 &mdash; Supplementary</span>
+    <h2>Per-Classifier Remedy Effectiveness</h2>
+  </div>
+  <p>
+    Remedy effectiveness evaluated separately for each classifier (LR, RF, XGBoost)
+    within each hypothesis group. CD diagrams show Nemenyi post-hoc ranks per
+    classifier; Wilcoxon tables report pairwise Bonferroni-corrected comparisons.
+    The H3 &gt; H1 &gt; H2 ordering and threshold correction dominance are
+    consistent across all classifiers.
+  </p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('clf','LR')">Logistic Regression</div>
+    <div class="tab" onclick="switchTab('clf','RF')">Random Forest</div>
+    <div class="tab" onclick="switchTab('clf','XGB')">XGBoost</div>
+  </div>
+
+  <div id="clf-LR" class="tab-content active">
+    <div class="fig-grid">
+      <div class="fig-card"><img src="assets/cd_LR_H1.png" alt="LR H1"><div class="fig-cap">LR · H1 · 6/15 significant</div></div>
+      <div class="fig-card"><img src="assets/cd_LR_H2.png" alt="LR H2"><div class="fig-cap">LR · H2 · 7/15 significant</div></div>
+      <div class="fig-card"><img src="assets/cd_LR_H3.png" alt="LR H3"><div class="fig-cap">LR · H3 · 0/15 significant</div></div>
+    </div>
+  </div>
+  <div id="clf-RF" class="tab-content">
+    <div class="fig-grid">
+      <div class="fig-card"><img src="assets/cd_RF_H1.png" alt="RF H1"><div class="fig-cap">RF · H1 · 14/15 significant</div></div>
+      <div class="fig-card"><img src="assets/cd_RF_H2.png" alt="RF H2"><div class="fig-cap">RF · H2 · 13/15 significant</div></div>
+      <div class="fig-card"><img src="assets/cd_RF_H3.png" alt="RF H3"><div class="fig-cap">RF · H3 · 0/15 significant</div></div>
+    </div>
+  </div>
+  <div id="clf-XGB" class="tab-content">
+    <div class="fig-grid">
+      <div class="fig-card"><img src="assets/cd_XGB_H1.png" alt="XGB H1"><div class="fig-cap">XGB · H1 · 12/15 significant</div></div>
+      <div class="fig-card"><img src="assets/cd_XGB_H2.png" alt="XGB H2"><div class="fig-cap">XGB · H2 · 11/15 significant</div></div>
+      <div class="fig-card"><img src="assets/cd_XGB_H3.png" alt="XGB H3"><div class="fig-cap">XGB · H3 · 0/15 significant</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Case Study ── -->
+<div class="section" id="case-study">
+  <div class="section-header">
+    <span class="section-num">04 &mdash; Supplementary</span>
+    <h2>Case Study: Vertebral Column Diagnosis</h2>
+  </div>
+  <p>
+    End-to-end application of the FIIS diagnostic pipeline to the UCI Vertebral
+    Column dataset (n = 310, IR = 2.1): Normal spine (minority, n<sub>1</sub> = 100)
+    vs Abnormal (majority, n<sub>0</sub> = 210), six biomechanical features.
+    The FIIS diagnosis is stable across all 30 CV folds.
+  </p>
+
+  <h3 style="font-size:1rem;margin-bottom:1rem;color:var(--muted)">FIIS Signature (mean across 30 folds)</h3>
+  <div class="sig-box">
+    <div><div class="sig-val">0.476</div><div class="sig-lbl">R<sub>n</sub></div></div>
+    <div><div class="sig-val">1.921</div><div class="sig-lbl">R<sub>p</sub></div></div>
+    <div><div class="sig-val" style="color:var(--accent2)">0.542</div><div class="sig-lbl">R<sub>g</sub></div></div>
+    <div><div class="sig-val">1.524</div><div class="sig-lbl">C</div></div>
+    <div><div class="sig-val">0.753</div><div class="sig-lbl">R</div></div>
+  </div>
+
+  <h3 style="font-size:1rem;margin-bottom:.75rem;color:var(--muted)">Diagnosis</h3>
+  <div class="diagnosis-box">
+    <div class="diag-chip diag-arch">Archetype C &mdash; Geometric Deficit (R<sub>g</sub> &lt; 1)</div>
+    <div class="diag-chip diag-comp">Deficiency (R = 0.753 &lt; 1)</div>
+    <div class="diag-chip diag-hyp">→ H2: Threshold correction preferred</div>
+  </div>
+
+  <div class="fig-grid">
+    <div class="fig-card">
+      <img src="assets/plot_fiis_folds.png" alt="FIIS per fold">
+      <div class="fig-cap">FIIS components across 30 CV folds. Archetype C and Deficiency are stable in 100% of folds.</div>
+    </div>
+    <div class="fig-card">
+      <img src="assets/plot_remedy_effectiveness.png" alt="Remedy effectiveness vertebral">
+      <div class="fig-cap">G-mean per remedy per classifier. Threshold correction leads for RF and XGBoost; class weighting leads for LR — consistent with the H2 per-classifier pattern.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Downloads ── -->
+<div class="section" id="downloads">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Downloads</h2>
+  </div>
+  <p>All experimental result files. Raw results files contain per-run data across all folds, classifiers, and remedies.</p>
+
+  <div class="dl-grid">
+    <a class="dl-card" href="data/real_data_raw.csv" download>
+      <span class="dl-icon">📄</span>
+      <div><div class="dl-name">real_data_raw.csv</div><div class="dl-desc">Per-run results · 94 datasets · ~24 MB</div></div>
+    </a>
+    <a class="dl-card" href="data/real_data_fiis.csv" download>
+      <span class="dl-icon">📊</span>
+      <div><div class="dl-name">real_data_fiis.csv</div><div class="dl-desc">FIIS components per dataset</div></div>
+    </a>
+    <a class="dl-card" href="data/archetype_discovery.csv" download>
+      <span class="dl-icon">🔬</span>
+      <div><div class="dl-name">archetype_discovery.csv</div><div class="dl-desc">Per-dataset archetype & compensation</div></div>
+    </a>
+    <a class="dl-card" href="data/remedy_effectiveness_agg.csv" download>
+      <span class="dl-icon">📈</span>
+      <div><div class="dl-name">remedy_effectiveness_agg.csv</div><div class="dl-desc">Aggregated remedy results</div></div>
+    </a>
+    <a class="dl-card" href="data/remedy_effectiveness_agg_per_classifier.csv" download>
+      <span class="dl-icon">📈</span>
+      <div><div class="dl-name">remedy_effectiveness_agg_per_classifier.csv</div><div class="dl-desc">Per-classifier remedy results</div></div>
+    </a>
+    <a class="dl-card" href="data/vertebral_raw.csv" download>
+      <span class="dl-icon">🏥</span>
+      <div><div class="dl-name">vertebral_raw.csv</div><div class="dl-desc">Vertebral case study raw results</div></div>
+    </a>
+    <a class="dl-card" href="data/wilcoxon_summary_per_classifier.csv" download>
+      <span class="dl-icon">📋</span>
+      <div><div class="dl-name">wilcoxon_summary_per_classifier.csv</div><div class="dl-desc">Pairwise Wilcoxon tests · all classifiers × groups</div></div>
+    </a>
+  </div>
+</div>
+
+<!-- Footer / BibTeX -->
+<footer>
+  <p style="margin-bottom:1.5rem">If you use this framework or data, please cite:</p>
+  <div class="bibtex" id="bibtex">@article{salmi2026fiis,
+  title   = {Beyond Class Imbalance: Fisher Information Diagnostic
+             for Imbalance Remedy Selection},
+  author  = {Salmi, Mabrouka and Atif, Dalia and Ventura, Sebastian},
+  journal = {IEEE},
+  year    = {2026}
+}</div>
+  <p style="margin-top:2rem">© 2026 Salmi, Atif, Ventura &nbsp;·&nbsp; Supplementary Materials</p>
+</footer>
+
+<script>
+// ── Data (inline for GitHub Pages) ──
+// Tables are populated from embedded JSON
+
+// ── Tab switcher ──
+function switchTab(group, id) {
+  document.querySelectorAll(`[id^="${group}-"]`).forEach(el => {
+    el.classList.toggle('active', el.id === `${group}-${id}`);
+  });
+  const tabs = document.querySelectorAll(`.tab[onclick*="'${group}'"]`);
+  tabs.forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(`'${id}'`)));
+}
+
+// ── Hypothesis filter ──
+let activeHyps = new Set(['H1','H2','H3']);
+function selectHyp(h) {
+  if (activeHyps.has(h) && activeHyps.size > 1) activeHyps.delete(h);
+  else activeHyps.add(h);
+  document.querySelectorAll('.hyp-chip').forEach(c => {
+    c.classList.toggle('active', activeHyps.has(c.dataset.h));
+  });
+  document.querySelectorAll('#cd-figs .fig-card').forEach(c => {
+    c.style.display = activeHyps.has(c.dataset.h) ? '' : 'none';
+  });
+}
+
+// ── Table search ──
+function filterTable(tableId, query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll(`#${tableId} tbody tr`).forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── Archetype table population ──
+const ARCH_COLORS = {A:'arch-A', C:'arch-C', B:'arch-A'};
+const COMP_COLORS = {D:'comp-D', O:'comp-O', B:'comp-B'};
+
+async function loadArchTable() {
+  try {
+    const resp = await fetch('data/archetype_discovery.csv');
+    const text = await resp.text();
+    const rows = text.trim().split('\n');
+    const headers = rows[0].split(',');
+    const idxMap = {};
+    ['dataset','source','IR','R_n_mean','R_p_mean','R_g_mean','C_mean',
+     'R_mean','archetype_label','compensation_label'].forEach(c => {
+       idxMap[c] = headers.indexOf(c);
+    });
+    const tbody = document.getElementById('arch-tbody');
+    rows.slice(1).forEach(row => {
+      const cols = row.split(',');
+      const arch = cols[idxMap['archetype_label']];
+      const comp = cols[idxMap['compensation_label']];
+      const mainComp = comp ? comp[0] : '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${cols[idxMap['dataset']]}</td>
+        <td>${cols[idxMap['source']]}</td>
+        <td>${parseFloat(cols[idxMap['IR']]).toFixed(2)}</td>
+        <td>${parseFloat(cols[idxMap['R_n_mean']]).toFixed(3)}</td>
+        <td>${parseFloat(cols[idxMap['R_p_mean']]).toFixed(3)}</td>
+        <td>${parseFloat(cols[idxMap['R_g_mean']]).toFixed(3)}</td>
+        <td>${parseFloat(cols[idxMap['C_mean']]).toFixed(3)}</td>
+        <td>${parseFloat(cols[idxMap['R_mean']]).toFixed(3)}</td>
+        <td class="${ARCH_COLORS[arch] || ''}">${arch}</td>
+        <td class="${COMP_COLORS[mainComp] || ''}">${comp}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch(e) {
+    console.warn('Could not load archetype CSV:', e);
+  }
+}
+
+loadArchTable();
+
+// ── Wilcoxon Table ──
+const CLF_SHORT = {
+  'logistic_regression': 'LR',
+  'random_forest': 'RF',
+  'xgboost': 'XGB'
+};
+
+function renderWilcoxon(data) {
+  const tbody = document.getElementById('wlx-tbody');
+  tbody.innerHTML = '';
+  data.forEach(row => {
+    const sig = row.sig_bonferroni;
+    const tr = document.createElement('tr');
+    if (sig) tr.style.background = 'rgba(108,140,255,.05)';
+    tr.innerHTML = `
+      <td>${CLF_SHORT[row.Classifier] || row.Classifier}</td>
+      <td><span style="font-weight:600;color:${
+        row.Group==='H1'?'#a07ad0':row.Group==='H2'?'#e08040':'#5cb860'
+      }">${row.Group}</span></td>
+      <td>${row.Remedy_1}</td>
+      <td>${row.Remedy_2}</td>
+      <td style="font-family:var(--mono)">${row.p_value.toFixed(4)}</td>
+      <td style="font-family:var(--mono)">${row.p_bonf.toFixed(4)}</td>
+      <td style="font-family:var(--mono);color:${row.mean_diff>0?'#5cb860':'#ef5350'}">${
+        (row.mean_diff>=0?'+':'')+row.mean_diff.toFixed(4)}</td>
+      <td style="font-family:var(--mono)">${row.effect_r.toFixed(3)}</td>
+      <td>${sig?'<span style="color:#6c8cff;font-weight:600">✓</span>':'<span style="color:#555">—</span>'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Inline data
+const WILCOXON_DATA = [{"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.2233, "effect_r": 0.87, "better": "Threshold Corr.", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 8.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.2196, "effect_r": 0.862, "better": "ROS", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 4.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.2199, "effect_r": 0.866, "better": "SMOTE", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 3.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.2126, "effect_r": 0.867, "better": "Borderline SMOTE", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 8.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.2196, "effect_r": 0.862, "better": "Class Weighting", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 643.0, "p_value": 0.0677, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0037, "effect_r": 0.238, "better": "Threshold Corr.", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 696.0, "p_value": 0.1537, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0034, "effect_r": 0.186, "better": "Threshold Corr.", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 514.0, "p_value": 0.0051, "p_bonf": 0.0766, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0107, "effect_r": 0.365, "better": "Threshold Corr.", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 660.0, "p_value": 0.0894, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0037, "effect_r": 0.221, "better": "Threshold Corr.", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 802.0, "p_value": 0.6787, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0003, "effect_r": 0.082, "better": "SMOTE", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 635.0, "p_value": 0.0592, "p_bonf": 0.8873, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.007, "effect_r": 0.246, "better": "ROS", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 836.5, "p_value": 0.883, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0001, "effect_r": 0.048, "better": "Class Weighting", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 452.0, "p_value": 0.0011, "p_bonf": 0.0162, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0072, "effect_r": 0.425, "better": "SMOTE", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 791.0, "p_value": 0.478, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0002, "effect_r": 0.092, "better": "SMOTE", "n": 59}, {"Classifier": "logistic_regression", "Group": "H1", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 642.5, "p_value": 0.0672, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.007, "effect_r": 0.238, "better": "Class Weighting", "n": 59}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.3304, "effect_r": 0.869, "better": "Threshold Corr.", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.3315, "effect_r": 0.875, "better": "ROS", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0003, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.3272, "effect_r": 0.875, "better": "SMOTE", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.3118, "effect_r": 0.869, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.3309, "effect_r": 0.875, "better": "Class Weighting", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 135.0, "p_value": 0.9273, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0012, "effect_r": 0.087, "better": "ROS", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 141.0, "p_value": 0.8115, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0032, "effect_r": 0.052, "better": "Threshold Corr.", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 87.0, "p_value": 0.0738, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0186, "effect_r": 0.367, "better": "Threshold Corr.", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 132.5, "p_value": 0.617, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0006, "effect_r": 0.102, "better": "Class Weighting", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 94.0, "p_value": 0.1096, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0044, "effect_r": 0.327, "better": "ROS", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 40.0, "p_value": 0.0017, "p_bonf": 0.0251, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0197, "effect_r": 0.642, "better": "ROS", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 139.5, "p_value": 0.7642, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0006, "effect_r": 0.061, "better": "ROS", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 60.0, "p_value": 0.0087, "p_bonf": 0.1307, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0154, "effect_r": 0.525, "better": "SMOTE", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 76.0, "p_value": 0.034, "p_bonf": 0.5098, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0038, "effect_r": 0.432, "better": "Class Weighting", "n": 24}, {"Classifier": "logistic_regression", "Group": "H2", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 36.5, "p_value": 0.002, "p_bonf": 0.0303, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0191, "effect_r": 0.662, "better": "Class Weighting", "n": 24}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 0.0, "p_value": 0.0039, "p_bonf": 0.0586, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0367, "effect_r": 0.885, "better": "Threshold Corr.", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 0.0, "p_value": 0.0078, "p_bonf": 0.1172, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0333, "effect_r": 0.885, "better": "ROS", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 0.0, "p_value": 0.0078, "p_bonf": 0.1172, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0342, "effect_r": 0.885, "better": "SMOTE", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 3.0, "p_value": 0.0391, "p_bonf": 0.5859, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0298, "effect_r": 0.804, "better": "Borderline SMOTE", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 0.0, "p_value": 0.0078, "p_bonf": 0.1172, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0342, "effect_r": 0.885, "better": "Class Weighting", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 16.0, "p_value": 0.4805, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0035, "effect_r": 0.456, "better": "Threshold Corr.", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 10.5, "p_value": 0.1758, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0025, "effect_r": 0.603, "better": "Threshold Corr.", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 22.0, "p_value": 1.0, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0069, "effect_r": 0.0, "better": "Threshold Corr.", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 12.0, "p_value": 0.25, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0025, "effect_r": 0.563, "better": "Threshold Corr.", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 9.0, "p_value": 0.4688, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.001, "effect_r": 0.643, "better": "SMOTE", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 15.0, "p_value": 0.7422, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0034, "effect_r": 0.483, "better": "ROS", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 10.0, "p_value": 0.5781, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.001, "effect_r": 0.617, "better": "Class Weighting", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 15.0, "p_value": 0.7422, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0044, "effect_r": 0.483, "better": "SMOTE", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 15.0, "p_value": 0.7188, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0, "effect_r": 0.483, "better": "Class Weighting", "n": 11}, {"Classifier": "logistic_regression", "Group": "H3", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 15.0, "p_value": 0.7422, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0044, "effect_r": 0.483, "better": "Class Weighting", "n": 11}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 23.5, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.193, "effect_r": 0.847, "better": "Threshold Corr.", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 191.5, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0532, "effect_r": 0.681, "better": "ROS", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 56.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.1036, "effect_r": 0.815, "better": "SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 285.0, "p_value": 0.0, "p_bonf": 0.0001, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.069, "effect_r": 0.59, "better": "Borderline SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 337.0, "p_value": 0.0001, "p_bonf": 0.0009, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0272, "effect_r": 0.538, "better": "No Correction", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 91.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.1397, "effect_r": 0.78, "better": "Threshold Corr.", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 161.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0894, "effect_r": 0.711, "better": "Threshold Corr.", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 62.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.124, "effect_r": 0.809, "better": "Threshold Corr.", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 27.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.2202, "effect_r": 0.843, "better": "Threshold Corr.", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 229.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0503, "effect_r": 0.645, "better": "SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 650.0, "p_value": 0.1116, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0157, "effect_r": 0.231, "better": "Borderline SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 3.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0805, "effect_r": 0.867, "better": "ROS", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 53.5, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0346, "effect_r": 0.817, "better": "SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 67.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.1308, "effect_r": 0.804, "better": "SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H1", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 145.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0962, "effect_r": 0.727, "better": "Borderline SMOTE", "n": 59}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.3162, "effect_r": 0.875, "better": "Threshold Corr.", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0987, "effect_r": 0.875, "better": "ROS", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.1678, "effect_r": 0.875, "better": "SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.1318, "effect_r": 0.869, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 42.0, "p_value": 0.0329, "p_bonf": 0.4941, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.018, "effect_r": 0.63, "better": "Class Weighting", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 6.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.2175, "effect_r": 0.84, "better": "Threshold Corr.", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 11.0, "p_value": 0.0, "p_bonf": 0.0001, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.1484, "effect_r": 0.811, "better": "Threshold Corr.", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 3.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.1844, "effect_r": 0.857, "better": "Threshold Corr.", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.2983, "effect_r": 0.875, "better": "Threshold Corr.", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 6.0, "p_value": 0.0, "p_bonf": 0.0006, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0691, "effect_r": 0.84, "better": "SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 44.0, "p_value": 0.0025, "p_bonf": 0.0368, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.033, "effect_r": 0.618, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0808, "effect_r": 0.875, "better": "ROS", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 69.5, "p_value": 0.0214, "p_bonf": 0.3216, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.036, "effect_r": 0.469, "better": "SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.1498, "effect_r": 0.875, "better": "SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H2", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.1138, "effect_r": 0.875, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 1.0, "p_value": 0.0078, "p_bonf": 0.1172, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0172, "effect_r": 0.858, "better": "Threshold Corr.", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 10.0, "p_value": 0.3125, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0062, "effect_r": 0.617, "better": "ROS", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 6.0, "p_value": 0.0547, "p_bonf": 0.8203, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0131, "effect_r": 0.724, "better": "SMOTE", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 15.0, "p_value": 0.7422, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0018, "effect_r": 0.483, "better": "No Correction", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 10.0, "p_value": 0.1641, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0089, "effect_r": 0.617, "better": "No Correction", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 8.0, "p_value": 0.0977, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0111, "effect_r": 0.67, "better": "Threshold Corr.", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 10.0, "p_value": 0.3125, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0042, "effect_r": 0.617, "better": "Threshold Corr.", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 3.0, "p_value": 0.0195, "p_bonf": 0.293, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.019, "effect_r": 0.804, "better": "Threshold Corr.", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 2.0, "p_value": 0.0117, "p_bonf": 0.1758, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0261, "effect_r": 0.831, "better": "Threshold Corr.", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 2.0, "p_value": 0.0234, "p_bonf": 0.3516, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0069, "effect_r": 0.831, "better": "SMOTE", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 13.0, "p_value": 0.3008, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.008, "effect_r": 0.536, "better": "ROS", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 1.0, "p_value": 0.0078, "p_bonf": 0.1172, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0151, "effect_r": 0.858, "better": "ROS", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 0.0, "p_value": 0.0039, "p_bonf": 0.0586, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0149, "effect_r": 0.885, "better": "SMOTE", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 1.0, "p_value": 0.0078, "p_bonf": 0.1172, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0219, "effect_r": 0.858, "better": "SMOTE", "n": 11}, {"Classifier": "random_forest", "Group": "H3", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 14.0, "p_value": 0.3594, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0071, "effect_r": 0.509, "better": "Borderline SMOTE", "n": 11}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 4.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.1418, "effect_r": 0.866, "better": "Threshold Corr.", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 32.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0718, "effect_r": 0.838, "better": "ROS", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 7.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0869, "effect_r": 0.863, "better": "SMOTE", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 73.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0715, "effect_r": 0.798, "better": "Borderline SMOTE", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 31.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0729, "effect_r": 0.839, "better": "Class Weighting", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 23.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0701, "effect_r": 0.847, "better": "Threshold Corr.", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 73.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0549, "effect_r": 0.798, "better": "Threshold Corr.", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 35.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0704, "effect_r": 0.835, "better": "Threshold Corr.", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 26.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0689, "effect_r": 0.844, "better": "Threshold Corr.", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 418.0, "p_value": 0.0004, "p_bonf": 0.0064, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0151, "effect_r": 0.459, "better": "SMOTE", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 673.0, "p_value": 0.1096, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0003, "effect_r": 0.208, "better": "ROS", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 667.5, "p_value": 0.3904, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0012, "effect_r": 0.214, "better": "Class Weighting", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 347.0, "p_value": 0.0001, "p_bonf": 0.0012, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0155, "effect_r": 0.529, "better": "SMOTE", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 417.0, "p_value": 0.0004, "p_bonf": 0.0062, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.014, "effect_r": 0.46, "better": "SMOTE", "n": 59}, {"Classifier": "xgboost", "Group": "H1", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 694.0, "p_value": 0.1494, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0015, "effect_r": 0.188, "better": "Class Weighting", "n": 59}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.1516, "effect_r": 0.875, "better": "Threshold Corr.", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0595, "effect_r": 0.869, "better": "ROS", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.1014, "effect_r": 0.869, "better": "SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.087, "effect_r": 0.869, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0596, "effect_r": 0.869, "better": "Class Weighting", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0921, "effect_r": 0.875, "better": "Threshold Corr.", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0502, "effect_r": 0.875, "better": "Threshold Corr.", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 0.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.0646, "effect_r": 0.875, "better": "Threshold Corr.", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 1.0, "p_value": 0.0, "p_bonf": 0.0, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": 0.092, "effect_r": 0.869, "better": "Threshold Corr.", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 40.0, "p_value": 0.001, "p_bonf": 0.0144, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0419, "effect_r": 0.642, "better": "SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 33.5, "p_value": 0.0015, "p_bonf": 0.0222, "sig_nominal": true, "sig_bonferroni": true, "mean_diff": -0.0276, "effect_r": 0.679, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 119.0, "p_value": 0.5633, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0001, "effect_r": 0.181, "better": "Class Weighting", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 86.5, "p_value": 0.0696, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0143, "effect_r": 0.37, "better": "SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 54.5, "p_value": 0.0064, "p_bonf": 0.0954, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0418, "effect_r": 0.557, "better": "SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H2", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 53.0, "p_value": 0.0043, "p_bonf": 0.065, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0275, "effect_r": 0.566, "better": "Borderline SMOTE", "n": 24}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Threshold Corr.", "W_stat": 0.0, "p_value": 0.0039, "p_bonf": 0.0586, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0152, "effect_r": 0.885, "better": "Threshold Corr.", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "ROS", "W_stat": 12.0, "p_value": 0.25, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0031, "effect_r": 0.563, "better": "ROS", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "SMOTE", "W_stat": 5.0, "p_value": 0.0391, "p_bonf": 0.5859, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0061, "effect_r": 0.751, "better": "SMOTE", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Borderline SMOTE", "W_stat": 3.0, "p_value": 0.0391, "p_bonf": 0.5859, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": -0.0031, "effect_r": 0.804, "better": "Borderline SMOTE", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "No Correction", "Remedy_2": "Class Weighting", "W_stat": 12.0, "p_value": 0.25, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0031, "effect_r": 0.563, "better": "Class Weighting", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "ROS", "W_stat": 3.0, "p_value": 0.0195, "p_bonf": 0.293, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0121, "effect_r": 0.804, "better": "Threshold Corr.", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "SMOTE", "W_stat": 4.0, "p_value": 0.0273, "p_bonf": 0.4102, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0091, "effect_r": 0.777, "better": "Threshold Corr.", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "Borderline SMOTE", "W_stat": 4.0, "p_value": 0.0273, "p_bonf": 0.4102, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0122, "effect_r": 0.777, "better": "Threshold Corr.", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "Threshold Corr.", "Remedy_2": "Class Weighting", "W_stat": 2.0, "p_value": 0.0117, "p_bonf": 0.1758, "sig_nominal": true, "sig_bonferroni": false, "mean_diff": 0.0121, "effect_r": 0.831, "better": "Threshold Corr.", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "SMOTE", "W_stat": 8.0, "p_value": 0.1953, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0031, "effect_r": 0.67, "better": "SMOTE", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "Borderline SMOTE", "W_stat": 20.0, "p_value": 0.8203, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0, "effect_r": 0.348, "better": "ROS", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "ROS", "Remedy_2": "Class Weighting", "W_stat": 14.0, "p_value": 0.6406, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0, "effect_r": 0.509, "better": "Class Weighting", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "SMOTE", "Remedy_2": "Borderline SMOTE", "W_stat": 20.5, "p_value": 0.8398, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.0031, "effect_r": 0.335, "better": "SMOTE", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "SMOTE", "Remedy_2": "Class Weighting", "W_stat": 12.0, "p_value": 0.4609, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": 0.003, "effect_r": 0.563, "better": "SMOTE", "n": 11}, {"Classifier": "xgboost", "Group": "H3", "Remedy_1": "Borderline SMOTE", "Remedy_2": "Class Weighting", "W_stat": 20.0, "p_value": 0.8203, "p_bonf": 1.0, "sig_nominal": false, "sig_bonferroni": false, "mean_diff": -0.0, "effect_r": 0.348, "better": "Class Weighting", "n": 11}];
+
+function filterWilcoxon() {
+  const clf = document.getElementById('wlx-clf').value;
+  const grp = document.getElementById('wlx-grp').value;
+  const sigOnly = document.getElementById('wlx-sig').checked;
+  const filtered = WILCOXON_DATA.filter(r =>
+    (!clf || r.Classifier === clf) &&
+    (!grp || r.Group === grp) &&
+    (!sigOnly || r.sig_bonferroni)
+  );
+  renderWilcoxon(filtered);
+}
+
+filterWilcoxon();
+</script>
+</body>
+</html>

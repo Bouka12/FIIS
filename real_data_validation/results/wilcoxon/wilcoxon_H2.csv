@@ -1,0 +1,16 @@
+Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,effect_r,better,n,group
+No Correction,Threshold Corr.,1.0,0.0,4e-06,True,True,-0.2661,0.799,Threshold Corr.,24,H2
+No Correction,ROS,0.0,0.0,2e-06,True,True,-0.1632,0.805,ROS,24,H2
+No Correction,SMOTE,0.0,0.0,2e-06,True,True,-0.1988,0.805,SMOTE,24,H2
+No Correction,Borderline SMOTE,1.0,0.0,4e-06,True,True,-0.1769,0.799,Borderline SMOTE,24,H2
+No Correction,Class Weighting,1.0,0.0,4e-06,True,True,-0.1362,0.799,Class Weighting,24,H2
+Threshold Corr.,ROS,1.0,0.0,4e-06,True,True,0.1028,0.799,Threshold Corr.,24,H2
+Threshold Corr.,SMOTE,7.0,4.4e-05,0.000659,True,True,0.0673,0.764,Threshold Corr.,24,H2
+Threshold Corr.,Borderline SMOTE,0.0,0.0,2e-06,True,True,0.0892,0.805,Threshold Corr.,24,H2
+Threshold Corr.,Class Weighting,0.0,0.0,2e-06,True,True,0.1299,0.805,Threshold Corr.,24,H2
+ROS,SMOTE,7.0,2e-06,3.4e-05,True,True,-0.0355,0.764,SMOTE,24,H2
+ROS,Borderline SMOTE,75.0,0.032116,0.481737,True,False,-0.0136,0.367,Borderline SMOTE,24,H2
+ROS,Class Weighting,0.0,0.0,2e-06,True,True,0.0271,0.805,ROS,24,H2
+SMOTE,Borderline SMOTE,46.0,0.002001,0.030014,True,True,0.0219,0.537,SMOTE,24,H2
+SMOTE,Class Weighting,0.0,0.0,2e-06,True,True,0.0626,0.805,SMOTE,24,H2
+Borderline SMOTE,Class Weighting,31.0,0.000278,0.004172,True,True,0.0407,0.624,Borderline SMOTE,24,H2
