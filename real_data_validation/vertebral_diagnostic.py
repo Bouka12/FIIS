@@ -21,6 +21,13 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+plt.rcParams.update({
+    'font.family': 'serif',
+    'font.size': 10,
+    'axes.linewidth': 0.8,
+    'mathtext.fontset': 'cm',   # renders $...$ math in Computer Modern, matching LaTeX
+    'legend.frameon': False,    # optional: cleaner legend box, common in papers
+})
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__),
                            "results", "vertebral")
@@ -197,12 +204,16 @@ def plot_remedy_effectiveness(df_raw, out_path):
 # 4. LaTeX Diagnostic Summary Table
 # ─────────────────────────────────────────────
 
+# ─────────────────────────────────────────────
+# 4. LaTeX Diagnostic Summary Table
+# ─────────────────────────────────────────────
+
 def make_latex_table(df_fiis, df_raw, tex_path):
     """
     Compact LaTeX table:
       - FIIS components (mean ± std)
       - Archetype + compensation
-      - Best remedy per classifier
+      - Per-classifier and pooled remedy mean/std
     """
     comp_cols = ['fiis_R_n','fiis_R_p','fiis_R_g','fiis_C','fiis_R']
     stats     = df_fiis[comp_cols].agg(['mean','std'])
@@ -214,20 +225,6 @@ def make_latex_table(df_fiis, df_raw, tex_path):
     comp_label  = comp_counts.index[0]
     comp_pct    = 100 * comp_counts.iloc[0] / len(df_fiis)
 
-    # Best remedy per classifier
-    clf_best = {}
-    for clf, grp in df_raw.groupby('classifier'):
-        pivot = grp.pivot_table(
-            index='run', columns='remedy',
-            values='G_mean', aggfunc='mean')[REMEDY_ORDER]
-        ranks    = pivot.rank(axis=1, ascending=False, method='average')
-        avg_r    = ranks.mean()
-        best_r   = avg_r.idxmin()
-        best_gm  = pivot[best_r].mean()
-        nc_gm    = pivot['no_correction'].mean()
-        clf_best[clf] = (REMEDY_LABELS[best_r], best_gm,
-                         best_gm - nc_gm)
-
     lines = []
     lines.append(r'\begin{table}[ht]')
     lines.append(r'\centering')
@@ -235,11 +232,13 @@ def make_latex_table(df_fiis, df_raw, tex_path):
     lines.append(
         r'\caption{FIIS diagnostic results for the Vertebral Column '
         r'dataset ($n=310$, IR$=2.1$). '
-        r'Component values: mean\,$\pm$\,std across 30 CV folds. '
+        r'Component values: mean\,$\pm$\,std across 30 training partitions. '
         r'Archetype and compensation regime are the most frequent '
         r'label across folds (frequency \%). '
-        r'Best remedy: highest Nemenyi average rank per classifier '
-        r'($\Delta$: G-mean improvement over no correction).}'
+        r'G-mean: mean and sample standard deviation across 30 '
+        r'cross-validation evaluations per classifier (six repetitions '
+        r'of five-fold CV). Avg. pools all 90 values across the three '
+        r'classifiers and 30 evaluations for each remedy.}'
     )
     lines.append(r'\label{tab:vertebral_diagnostic}')
 
@@ -278,7 +277,7 @@ def make_latex_table(df_fiis, df_raw, tex_path):
     lines.append(r'\toprule')
     lines.append(
         r'\multicolumn{5}{c}{\textbf{(b) G-mean per Remedy '
-        r'(mean / std across 30 runs)}} \\')
+        r'(mean / std)}} \\')
     lines.append(r'\midrule')
     lines.append(
         r'\textbf{Remedy} & \textbf{LR} & \textbf{RF} '
@@ -300,9 +299,9 @@ def make_latex_table(df_fiis, df_raw, tex_path):
 
         lines.append(
             f"    {REMEDY_LABELS[r]} & " +
-            ' & '.join(means) + r' \\\\')
+            ' & '.join(means) + r' \\')
         lines.append(
-            f"    & " + ' & '.join(stds) + r' \\\\')
+            f"    & " + ' & '.join(stds) + r' \\')
         if i < len(REMEDY_ORDER) - 1:
             lines.append(r'\midrule')
 
@@ -314,10 +313,74 @@ def make_latex_table(df_fiis, df_raw, tex_path):
         f.write('\n'.join(lines))
     print(f"Saved: {tex_path}")
 
-
 # ─────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────
+
+# ─────────────────────────────────────────────
+# Input completeness checks (raw results + FIIS)
+# ─────────────────────────────────────────────
+
+def validate_results(df_raw, df_fiis):
+    """Stop before analysis if the expected records or values are missing."""
+    classifiers = ['logistic_regression', 'random_forest', 'xgboost']
+    keys = ['classifier', 'remedy', 'run']
+    fiis_numeric = ['fiis_R_n', 'fiis_R_p', 'fiis_R_g', 'fiis_C', 'fiis_R']
+    labels = ['fiis_archetype', 'fiis_compensation']
+    required_raw = keys + ['repeat', 'fold', 'G_mean']
+    required_fiis = ['run', 'repeat', 'fold'] + fiis_numeric + labels
+    errors = []
+
+    for name, frame, required in [
+        ('vertebral_raw.csv', df_raw, required_raw),
+        ('vertebral_fiis.csv', df_fiis, required_fiis),
+    ]:
+        missing = sorted(set(required) - set(frame.columns))
+        if missing:
+            errors.append(f"{name}: missing columns {missing}")
+    if errors:
+        raise ValueError("Input validation failed:\n" + "\n".join(errors))
+
+    for name, frame, required in [
+        ('vertebral_raw.csv', df_raw, required_raw),
+        ('vertebral_fiis.csv', df_fiis, required_fiis),
+    ]:
+        if frame[required].isna().any().any():
+            errors.append(f"{name}: missing required values")
+        blank = frame[required].astype(str).apply(lambda col: col.str.strip().eq(''))
+        if blank.any().any():
+            errors.append(f"{name}: blank required values")
+        numeric = ['run', 'repeat', 'fold'] + (
+            ['G_mean'] if name == 'vertebral_raw.csv' else fiis_numeric)
+        values = frame[numeric].apply(pd.to_numeric, errors='coerce')
+        if not np.isfinite(values.to_numpy(dtype=float)).all():
+            errors.append(f"{name}: non-numeric or non-finite required numbers")
+        if not values['repeat'].isin(range(6)).all() or not values['fold'].isin(range(5)).all():
+            errors.append(f"{name}: unexpected repeat/fold indices")
+        if not (values['run'] == 5 * values['repeat'] + values['fold']).all():
+            errors.append(f"{name}: inconsistent run/repeat/fold indices")
+
+    expected = {(c, r, run) for c in classifiers for r in REMEDY_ORDER
+                for run in range(30)}
+    actual = set(df_raw[keys].itertuples(index=False, name=None))
+    if len(df_raw) != 540:
+        errors.append(f"vertebral_raw.csv: expected 540 rows, found {len(df_raw)}")
+    if df_raw.duplicated(keys).any():
+        errors.append("vertebral_raw.csv: duplicate classifier/remedy/run records")
+    if actual != expected:
+        errors.append(f"vertebral_raw.csv: {len(expected - actual)} missing and "
+                      f"{len(actual - expected)} unexpected combinations")
+    if len(df_fiis) != 30 or df_fiis['run'].duplicated().any() or set(df_fiis['run']) != set(range(30)):
+        errors.append("vertebral_fiis.csv: expected exactly one record for each run 0–29")
+    if not df_fiis['fiis_archetype'].isin(['A', 'B', 'C']).all():
+        errors.append("vertebral_fiis.csv: unexpected archetype label")
+    if not df_fiis['fiis_compensation'].isin(['D', 'B', 'O']).all():
+        errors.append("vertebral_fiis.csv: unexpected compensation label")
+    if errors:
+        raise ValueError("Input validation failed:\n" + "\n".join(errors))
+    print("Completeness checks passed: 540 classification records and 30 FIIS records.")
+
+
 
 def main():
     raw_path  = os.path.join(RESULTS_DIR, 'vertebral_raw.csv')
@@ -327,8 +390,13 @@ def main():
         print(f"Error: {raw_path} not found. Run vertebral_pipeline.py first.")
         return
 
+    if not os.path.exists(fiis_path):
+        raise FileNotFoundError(f"{fiis_path} not found. Run vertebral_pipeline.py first.")
+
+
     df_raw  = pd.read_csv(raw_path)
     df_fiis = pd.read_csv(fiis_path)
+    validate_results(df_raw, df_fiis)
 
     print(f"Loaded: {len(df_raw)} result rows, "
           f"{len(df_fiis)} FIIS fold records")

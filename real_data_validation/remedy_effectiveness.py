@@ -36,7 +36,13 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from scipy.stats import friedmanchisquare
 from itertools import combinations
-
+plt.rcParams.update({
+    'font.family': 'serif',
+    'font.size': 10,
+    'axes.linewidth': 0.8,
+    'mathtext.fontset': 'cm',   # renders $...$ math in Computer Modern, matching LaTeX
+    'legend.frameon': False,    # optional: cleaner legend box, common in papers
+})
 warnings.filterwarnings('ignore')
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results")
@@ -71,8 +77,8 @@ GROUP_COLORS = {
     'H3': '#2E7D32',   # green  — Balance/Overbalance
 }
 GROUP_LABELS = {
-    'H1': 'H1: Archetype A + Deficiency (59 datasets)',
-    'H2': 'H2: Archetype C + Deficiency (24 datasets)',
+    'H1': 'H1: Archetype A + Deficiency (58 datasets)',
+    'H2': 'H2: Archetype C + Deficiency (25 datasets)',
     'H3': 'H3: Balance/Overbalance (11 datasets)',
 }
 
@@ -267,7 +273,7 @@ def plot_cd_diagram(res, hyp_group, out_path):
         if not found:
             final_cliques.append(set(cl))
 
-    fig, ax = plt.subplots(figsize=(10, 4))
+    fig, ax = plt.subplots(figsize=(8, 3))
     fig.patch.set_facecolor(BG)
     ax.set_facecolor(BG)
     ax.axis('off')
@@ -312,10 +318,10 @@ def plot_cd_diagram(res, hyp_group, out_path):
 
     # CD bar
     best = s_ranks[0]
-    ax.annotate('', xy=(best+cd, 2.2), xytext=(best, 2.2),
+    ax.annotate('', xy=(best+cd, 1.1), xytext=(best, 1.1),
                 arrowprops=dict(arrowstyle='<->', color='black',
-                                lw=1.5, mutation_scale=10))
-    ax.text((best*2+cd)/2, 2.42, f'CD={cd:.2f}',
+                                lw=1.5, mutation_scale=10),)
+    ax.text((best*2+cd)/2, 1.4, f'CD={cd:.2f}',
             ha='center', va='bottom', fontsize=9)
 
     # Left labels (best→worst, shallowest→deepest)
@@ -547,7 +553,7 @@ def plot_violin_three_groups(agg, out_path):
 def main():
     raw_path  = os.path.join(RESULTS_DIR, 'real_data_raw.csv')
     arch_path = os.path.join(RESULTS_DIR,
-                             'archetype_discovery', 'archetype_discovery.csv')
+                             'archetype_discovery_noB', 'archetype_discovery.csv')
 
     print("Step 1 — Aggregating data...")
     agg, arch = aggregate_data(raw_path, arch_path)

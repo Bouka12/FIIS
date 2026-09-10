@@ -7,7 +7,7 @@ Downloads and processes all real-world imbalanced datasets:
 
 Evaluation: 5x6 repeated stratified CV = 30 runs per configuration.
 
-Classifiers: Logistic Regression, Random Forest, XGBoost, SVM (RBF)
+Classifiers: Logistic Regression, Random Forest, XGBoost
   - All use default hyperparameters with fixed random_state
   - FIIS always computed from Logistic Regression on original
     training data regardless of which classifier is used
@@ -30,7 +30,6 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (
@@ -43,16 +42,16 @@ from imblearn.datasets import fetch_datasets
 try:
     from xgboost import XGBClassifier
     XGBOOST_AVAILABLE = True
-except ImportError:
-    XGBOOST_AVAILABLE = False
-    print("⚠  XGBoost not installed — skipping XGBoost classifier")
+except ImportError as exc:
+    raise ImportError("XGBoost is required for this three-classifier experiment.") from exc
 
-warnings.filterwarnings('ignore')
+# Keep fitting warnings visible, including convergence warnings.
+warnings.simplefilter('default')
 
 # ─────────────────────────────────────────────
 # Configuration
 # ─────────────────────────────────────────────
-RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results")
+RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results_corrected")
 DATA_DIR    = os.path.join(os.path.dirname(__file__), "data", "keel")
 N_SPLITS    = 5
 N_REPEATS   = 6      # 5x6 = 30 runs
@@ -79,13 +78,7 @@ def get_classifiers(seed=SEED):
         'random_forest': RandomForestClassifier(
             n_estimators=100,
             random_state=seed,
-            # n_jobs=-1
-        ),
-        'svm': SVC(
-            kernel='rbf',
-            probability=True,   # Platt scaling for predict_proba
-            C=1.0,
-            random_state=seed,
+            n_jobs=1  # One worker; no all-core parallelism
         ),
     }
     if XGBOOST_AVAILABLE:
@@ -94,6 +87,7 @@ def get_classifiers(seed=SEED):
             random_state=seed,
             eval_metric='logloss',
             verbosity=0,
+            n_jobs=1,  # One worker; no all-core parallelism
             use_label_encoder=False
         )
     return clfs
@@ -585,12 +579,7 @@ def run_dataset(name, X, y, source):
 
     ir = n0 / n1
 
-    try:
-        scaler = StandardScaler()
-        X      = scaler.fit_transform(X)
-    except Exception as e:
-        print(f"  ✗ {name}: scaling failed: {e}")
-        return []
+    # Keep the data unscaled until each training/test split is formed.
 
     rskf      = RepeatedStratifiedKFold(
         n_splits=N_SPLITS, n_repeats=N_REPEATS, random_state=SEED)
@@ -607,6 +596,12 @@ def run_dataset(name, X, y, source):
 
         if (y_tr == 1).sum() < 2 or (y_te == 1).sum() < 1:
             continue
+
+        # Fit scaling on this training fold only, then transform the test fold.
+        # Test observations never contribute to the scaling mean or variance.
+        scaler = StandardScaler()
+        X_tr = scaler.fit_transform(X_tr)
+        X_te = scaler.transform(X_te)
 
         # ── FIIS computed ONCE per fold — logistic regression,
         #    original training data, shared by all classifiers/remedies

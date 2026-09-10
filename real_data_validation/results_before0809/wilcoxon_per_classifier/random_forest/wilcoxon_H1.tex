@@ -1,0 +1,27 @@
+\begin{table}[ht]
+\centering
+\scriptsize
+\caption{Pairwise Wilcoxon signed-rank tests for random_forest --- H1: Archetype A + Deficiency ($n=59$ datasets). $p$: nominal; $p_B$: Bonferroni-corrected ($\alpha_B=0.0033$). $r$: rank-biserial effect size. $\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). $\ast$: $p<0.05$; $\ast\ast$: $p_B<0.05$.}
+\label{tab:wilcoxon_random_forest_h1}
+\begin{tabular}{llrrrrl}
+\toprule
+\textbf{Remedy 1} & \textbf{Remedy 2} & \textbf{$p$} & \textbf{$p_B$} & \textbf{$\Delta$} & \textbf{$r$} & \textbf{Sig.} \\\\
+\midrule
+    \textbf{No Correction} & \textbf{Threshold Corr.} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.1930} & \textbf{0.847} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{ROS} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.0532} & \textbf{0.681} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.1036} & \textbf{0.815} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{Borderline SMOTE} & \textbf{0.0000} & \textbf{0.0001} & \textbf{-0.0690} & \textbf{0.590} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{Class Weighting} & \textbf{0.0001} & \textbf{0.0009} & \textbf{+0.0272} & \textbf{0.538} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{ROS} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.1397} & \textbf{0.780} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0894} & \textbf{0.711} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{Borderline SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.1240} & \textbf{0.809} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{Class Weighting} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.2202} & \textbf{0.843} & $\ast\ast$ \\
+    \textbf{ROS} & \textbf{SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.0503} & \textbf{0.645} & $\ast\ast$ \\
+    ROS & Borderline SMOTE & 0.1116 & 1.0000 & -0.0157 & 0.231 & --- \\
+    \textbf{ROS} & \textbf{Class Weighting} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0805} & \textbf{0.867} & $\ast\ast$ \\
+    \textbf{SMOTE} & \textbf{Borderline SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0346} & \textbf{0.817} & $\ast\ast$ \\
+    \textbf{SMOTE} & \textbf{Class Weighting} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.1308} & \textbf{0.804} & $\ast\ast$ \\
+    \textbf{Borderline SMOTE} & \textbf{Class Weighting} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0962} & \textbf{0.727} & $\ast\ast$ \\
+\bottomrule
+\end{tabular}
+\end{table}

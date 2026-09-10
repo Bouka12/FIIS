@@ -1,27 +1,27 @@
 \begin{table}[ht]
 \centering
 \scriptsize
-\caption{Pairwise Wilcoxon signed-rank tests for logistic_regression --- H3: Balance/Overbalance ($n=11$ datasets). $p$: nominal; $p_B$: Bonferroni-corrected ($\alpha_B=0.0033$). $r$: rank-biserial effect size. $\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). $\ast$: $p<0.05$; $\ast\ast$: $p_B<0.05$.}
+\caption{Pairwise Wilcoxon signed-rank tests for logistic_regression --- H3: Balance/Overbalance ($n=11$ datasets). $p$: nominal; $p_B$: Bonferroni-corrected ($\alpha_B=0.0033$). $\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). $\ast$: $p<0.05$; $\ast\ast$: $p_B<0.05$.}
 \label{tab:wilcoxon_logistic_regression_h3}
-\begin{tabular}{llrrrrl}
+\begin{tabular}{llrrrl}
 \toprule
-\textbf{Remedy 1} & \textbf{Remedy 2} & \textbf{$p$} & \textbf{$p_B$} & \textbf{$\Delta$} & \textbf{$r$} & \textbf{Sig.} \\\\
+\textbf{Remedy 1} & \textbf{Remedy 2} & \textbf{$p$} & \textbf{$p_B$} & \textbf{$\Delta$} &  \textbf{Sig.} \\\\
 \midrule
-    No Correction & Threshold Corr. & 0.0039 & 0.0586 & -0.0367 & 0.885 & $\ast$ \\
-    No Correction & ROS & 0.0078 & 0.1172 & -0.0333 & 0.885 & $\ast$ \\
-    No Correction & SMOTE & 0.0078 & 0.1172 & -0.0342 & 0.885 & $\ast$ \\
-    No Correction & Borderline SMOTE & 0.0391 & 0.5859 & -0.0298 & 0.804 & $\ast$ \\
-    No Correction & Class Weighting & 0.0078 & 0.1172 & -0.0342 & 0.885 & $\ast$ \\
-    Threshold Corr. & ROS & 0.4805 & 1.0000 & +0.0035 & 0.456 & --- \\
-    Threshold Corr. & SMOTE & 0.1758 & 1.0000 & +0.0025 & 0.603 & --- \\
-    Threshold Corr. & Borderline SMOTE & 1.0000 & 1.0000 & +0.0069 & 0.000 & --- \\
-    Threshold Corr. & Class Weighting & 0.2500 & 1.0000 & +0.0025 & 0.563 & --- \\
-    ROS & SMOTE & 0.4688 & 1.0000 & -0.0010 & 0.643 & --- \\
-    ROS & Borderline SMOTE & 0.7422 & 1.0000 & +0.0034 & 0.483 & --- \\
-    ROS & Class Weighting & 0.5781 & 1.0000 & -0.0010 & 0.617 & --- \\
-    SMOTE & Borderline SMOTE & 0.7422 & 1.0000 & +0.0044 & 0.483 & --- \\
-    SMOTE & Class Weighting & 0.7188 & 1.0000 & -0.0000 & 0.483 & --- \\
-    Borderline SMOTE & Class Weighting & 0.7422 & 1.0000 & -0.0044 & 0.483 & --- \\
+    No Correction & Threshold Corr. & 0.0039 & 0.0586 & -0.0362 & $\ast$ \\
+    No Correction & ROS & 0.0117 & 0.1758 & -0.0328 & $\ast$ \\
+    No Correction & SMOTE & 0.0078 & 0.1172 & -0.0341 & $\ast$ \\
+    No Correction & Borderline SMOTE & 0.0391 & 0.5859 & -0.0299 & $\ast$ \\
+    No Correction & Class Weighting & 0.0117 & 0.1758 & -0.0338 & $\ast$ \\
+    Threshold Corr. & ROS & 0.4961 & 1.0000 & +0.0034 & --- \\
+    Threshold Corr. & SMOTE & 0.2500 & 1.0000 & +0.0022 & --- \\
+    Threshold Corr. & Borderline SMOTE & 0.7969 & 1.0000 & +0.0063 & --- \\
+    Threshold Corr. & Class Weighting & 0.2500 & 1.0000 & +0.0024 & --- \\
+    ROS & SMOTE & 0.2109 & 1.0000 & -0.0013 & --- \\
+    ROS & Borderline SMOTE & 0.5156 & 1.0000 & +0.0029 & --- \\
+    ROS & Class Weighting & 0.5781 & 1.0000 & -0.0010 & --- \\
+    SMOTE & Borderline SMOTE & 0.6406 & 1.0000 & +0.0042 & --- \\
+    SMOTE & Class Weighting & 0.5469 & 1.0000 & +0.0003 & --- \\
+    Borderline SMOTE & Class Weighting & 0.8203 & 1.0000 & -0.0039 & --- \\
 \bottomrule
 \end{tabular}
 \end{table}

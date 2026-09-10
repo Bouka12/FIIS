@@ -1,16 +1,16 @@
-Classifier,Group,Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,effect_r,better,n
-logistic_regression,H3,No Correction,Threshold Corr.,0.0,0.003906,0.058594,True,False,-0.0367,0.885,Threshold Corr.,11
-logistic_regression,H3,No Correction,ROS,0.0,0.007812,0.117188,True,False,-0.0333,0.885,ROS,11
-logistic_regression,H3,No Correction,SMOTE,0.0,0.007812,0.117188,True,False,-0.0342,0.885,SMOTE,11
-logistic_regression,H3,No Correction,Borderline SMOTE,3.0,0.039062,0.585938,True,False,-0.0298,0.804,Borderline SMOTE,11
-logistic_regression,H3,No Correction,Class Weighting,0.0,0.007812,0.117188,True,False,-0.0342,0.885,Class Weighting,11
-logistic_regression,H3,Threshold Corr.,ROS,16.0,0.480469,1.0,False,False,0.0035,0.456,Threshold Corr.,11
-logistic_regression,H3,Threshold Corr.,SMOTE,10.5,0.175781,1.0,False,False,0.0025,0.603,Threshold Corr.,11
-logistic_regression,H3,Threshold Corr.,Borderline SMOTE,22.0,1.0,1.0,False,False,0.0069,0.0,Threshold Corr.,11
-logistic_regression,H3,Threshold Corr.,Class Weighting,12.0,0.25,1.0,False,False,0.0025,0.563,Threshold Corr.,11
-logistic_regression,H3,ROS,SMOTE,9.0,0.46875,1.0,False,False,-0.001,0.643,SMOTE,11
-logistic_regression,H3,ROS,Borderline SMOTE,15.0,0.742188,1.0,False,False,0.0034,0.483,ROS,11
-logistic_regression,H3,ROS,Class Weighting,10.0,0.578125,1.0,False,False,-0.001,0.617,Class Weighting,11
-logistic_regression,H3,SMOTE,Borderline SMOTE,15.0,0.742188,1.0,False,False,0.0044,0.483,SMOTE,11
-logistic_regression,H3,SMOTE,Class Weighting,15.0,0.71875,1.0,False,False,-0.0,0.483,Class Weighting,11
-logistic_regression,H3,Borderline SMOTE,Class Weighting,15.0,0.742188,1.0,False,False,-0.0044,0.483,Class Weighting,11
+Classifier,Group,Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,better,n,n_nonzero
+logistic_regression,H3,No Correction,Threshold Corr.,0.0,0.003906,0.058594,True,False,-0.0362,Threshold Corr.,11,9
+logistic_regression,H3,No Correction,ROS,1.5,0.011719,0.175781,True,False,-0.0328,ROS,11,9
+logistic_regression,H3,No Correction,SMOTE,0.0,0.007812,0.117188,True,False,-0.0341,SMOTE,11,8
+logistic_regression,H3,No Correction,Borderline SMOTE,3.0,0.039062,0.585938,True,False,-0.0299,Borderline SMOTE,11,8
+logistic_regression,H3,No Correction,Class Weighting,2.0,0.011719,0.175781,True,False,-0.0338,Class Weighting,11,9
+logistic_regression,H3,Threshold Corr.,ROS,16.0,0.496094,1.0,False,False,0.0034,Threshold Corr.,11,9
+logistic_regression,H3,Threshold Corr.,SMOTE,9.0,0.25,1.0,False,False,0.0022,Threshold Corr.,11,8
+logistic_regression,H3,Threshold Corr.,Borderline SMOTE,20.0,0.796875,1.0,False,False,0.0063,Threshold Corr.,11,9
+logistic_regression,H3,Threshold Corr.,Class Weighting,12.0,0.25,1.0,False,False,0.0024,Threshold Corr.,11,9
+logistic_regression,H3,ROS,SMOTE,8.5,0.210938,1.0,False,False,-0.0013,SMOTE,11,8
+logistic_regression,H3,ROS,Borderline SMOTE,16.5,0.515625,1.0,False,False,0.0029,ROS,11,9
+logistic_regression,H3,ROS,Class Weighting,10.0,0.578125,1.0,False,False,-0.001,Class Weighting,11,7
+logistic_regression,H3,SMOTE,Borderline SMOTE,14.0,0.640625,1.0,False,False,0.0042,SMOTE,11,8
+logistic_regression,H3,SMOTE,Class Weighting,17.0,0.546875,1.0,False,False,0.0003,SMOTE,11,9
+logistic_regression,H3,Borderline SMOTE,Class Weighting,20.0,0.820312,1.0,False,False,-0.0039,Class Weighting,11,9

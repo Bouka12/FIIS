@@ -22,10 +22,11 @@ import os
 import warnings
 import numpy as np
 import pandas as pd
-from scipy.stats import wilcoxon
+from scipy.stats import wilcoxon, rankdata
+import scipy 
 from itertools import combinations
 
-warnings.filterwarnings('ignore')
+# warnings.filterwarnings('ignore')
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results")
 OUT_DIR     = os.path.join(RESULTS_DIR, "wilcoxon")
@@ -51,139 +52,194 @@ ALPHA_BONF  = ALPHA / N_PAIRS
 
 def run_wilcoxon_group(pivot, group_label):
     """
-    Run all pairwise Wilcoxon signed-rank tests for one group.
-    pivot: DataFrame (datasets x remedies) of mean G-mean values.
-    Returns DataFrame of results.
+    Pairwise two-sided Wilcoxon signed-rank tests on dataset-level
+    mean G-mean values.
+
+    effect_r: signed matched-pairs rank-biserial correlation.
+    Positive values favour Remedy 1; negative values favour Remedy 2.
+
+    Bonferroni correction is applied to 15 comparisons within each
+    hypothesis group.
     """
+    pivot = pivot.loc[:, REMEDY_ORDER]
+
+    if pivot.empty:
+        raise ValueError(f"{group_label}: no datasets.")
+
+    if not pivot.index.is_unique:
+        raise ValueError(f"{group_label}: duplicate dataset identifiers.")
+
+    values = pivot.to_numpy(dtype=float)
+    if not np.isfinite(values).all():
+        raise ValueError(
+            f"{group_label}: missing or non-finite G-mean values."
+        )
+
+    if ((values < 0) | (values > 1)).any():
+        raise ValueError(f"{group_label}: G-mean values outside [0, 1].")
+
     n = len(pivot)
     rows = []
 
     for r1, r2 in combinations(REMEDY_ORDER, 2):
-        x = pivot[r1].values
-        y = pivot[r2].values
-        d = x - y
+        x = pivot[r1].to_numpy(dtype=float)
+        y = pivot[r2].to_numpy(dtype=float)
 
-        # Skip if all differences are zero
+        # The supplied aggregate CSV stores G-mean to four decimals.
+        # Remove floating-point subtraction artefacts at that precision.
+        d = np.round(x - y, decimals=4)
+
+        nonzero = d[d != 0]
+        n_nonzero = len(nonzero)
+
+        if n_nonzero == 0:
+            # Explicit convention when every paired value is identical.
+            stat, p_val = 0.0, 1.0
+        else:
+            result = wilcoxon(
+                d,
+                alternative="two-sided",
+                zero_method="wilcox",
+                correction=False,
+                method="auto",
+            )
+
+            stat = float(result.statistic)
+            p_val = float(result.pvalue)
+
+            if not np.isfinite(stat) or not np.isfinite(p_val):
+                raise ValueError(
+                    f"{group_label}: invalid Wilcoxon result "
+                    f"for {r1} versus {r2}."
+                )
+
+
+        mean_diff = float(np.mean(x - y))
+        p_bonf = min(p_val * N_PAIRS, 1.0)
+
+        # Descriptive direction of the arithmetic mean difference.
+        # This is not a declaration of statistical superiority.
         if np.all(d == 0):
-            stat, p_val = np.nan, 1.0
+            better = "Tie"
+        elif mean_diff > 0:
+            better = REMEDY_LABELS[r1]
+        elif mean_diff < 0:
+            better = REMEDY_LABELS[r2]
         else:
-            try:
-                stat, p_val = wilcoxon(x, y, alternative='two-sided',
-                                       zero_method='wilcox')
-            except Exception:
-                stat, p_val = np.nan, 1.0
-
-        # Effect size: rank-biserial correlation
-        # r = Z / sqrt(n) where Z from normal approximation
-        from scipy.stats import norm
-        if not np.isnan(stat) and p_val < 1.0:
-            # Mean and std of W under H0
-            n_pairs = n * (n - 1) / 2
-            mu_w    = n_pairs / 2
-            sig_w   = np.sqrt(n * (n+1) * (2*n+1) / 24)
-            z       = (stat - mu_w) / sig_w if sig_w > 0 else 0
-            r_eff   = abs(z) / np.sqrt(n)
-        else:
-            r_eff = 0.0
-
-        sig_bonf = p_val < ALPHA_BONF
-        sig_nom  = p_val < ALPHA
-
-        # Which remedy is better?
-        mean_diff = np.mean(x - y)
-        better = REMEDY_LABELS[r1] if mean_diff > 0 else REMEDY_LABELS[r2]
+            better = "Tie"
 
         rows.append({
-            'Remedy_1':     REMEDY_LABELS[r1],
-            'Remedy_2':     REMEDY_LABELS[r2],
-            'W_stat':       round(stat, 2) if not np.isnan(stat) else np.nan,
-            'p_value':      round(p_val, 6),
-            'p_bonf':       round(min(p_val * N_PAIRS, 1.0), 6),
-            'sig_nominal':  sig_nom,
-            'sig_bonferroni': sig_bonf,
-            'mean_diff':    round(mean_diff, 4),
-            'effect_r':     round(r_eff, 3),
-            'better':       better,
-            'n':            n,
+            "Remedy_1": REMEDY_LABELS[r1],
+            "Remedy_2": REMEDY_LABELS[r2],
+            "W_stat": stat,
+            "p_value": p_val,
+            "p_bonf": p_bonf,
+            "sig_nominal": p_val < ALPHA,
+            "sig_bonferroni": p_bonf < ALPHA,
+            "mean_diff": mean_diff,
+            "better": better,
+            "n": n,
+            "n_nonzero": n_nonzero,
         })
 
     df = pd.DataFrame(rows)
 
-    print(f"\n{'='*70}")
-    print(f"{group_label} (n={n}, Bonferroni alpha={ALPHA_BONF:.4f})")
-    print(f"{'='*70}")
-    print(f"{'Remedy 1':<22} {'Remedy 2':<22} "
-          f"{'p-val':>8} {'p-bonf':>8} {'sig*':>5} {'diff':>7} {'r':>5}")
-    print("-"*80)
+    print(
+        f"\n{group_label}: n={n}, "
+        f"Bonferroni threshold={ALPHA_BONF:.6f}, "
+        f"SciPy={scipy.__version__}"
+    )
+    print(
+        f"{'Remedy 1':<22} {'Remedy 2':<22} "
+        f"{'p':>10} {'p_B':>10} {'Sig.':>5} "
+        f"{'diff':>9}"
+    )
+
     for _, row in df.iterrows():
-        sig_str = '**' if row['sig_bonferroni'] else \
-                  ('*' if row['sig_nominal'] else '')
-        print(f"{row['Remedy_1']:<22} {row['Remedy_2']:<22} "
-              f"{row['p_value']:>8.4f} {row['p_bonf']:>8.4f} "
-              f"{sig_str:>5} {row['mean_diff']:>7.4f} "
-              f"{row['effect_r']:>5.3f}")
+        sig = (
+            "**" if row["sig_bonferroni"]
+            else "*" if row["sig_nominal"]
+            else ""
+        )
+        print(
+            f"{row['Remedy_1']:<22} {row['Remedy_2']:<22} "
+            f"{row['p_value']:>10.4g} {row['p_bonf']:>10.4g} "
+            f"{sig:>5} {row['mean_diff']:>+9.4f}"
+        )
 
     return df
 
 
 def make_latex_table(df, group_label, hyp, tex_path):
     """LaTeX table of pairwise Wilcoxon results."""
-    n = df['n'].iloc[0]
-    ab = round(ALPHA_BONF, 4)
-    lines = []
-    lines.append(r'\begin{table}[ht]')
-    lines.append(r'\centering')
-    lines.append(r'\scriptsize')
-    cap = (
-        'Pairwise Wilcoxon signed-rank tests --- ' +
-        group_label + ' ($n=' + str(n) + '$ datasets). '
-        '$p$: nominal; $p_B$: Bonferroni-corrected '
-        '($\\alpha_B=' + str(ab) + '$). '
-        '$r$: rank-biserial effect size. '
-        '$\\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). '
-        '$\\ast$: $p<0.05$; $\\ast\\ast$: $p_B<0.05$.'
+    n = int(df["n"].iloc[0])
+
+    def format_p(value):
+        if value < 0.0001:
+            return r"$<0.0001$"
+        return f"{value:.4f}"
+
+    caption = (
+        "Pairwise two-sided Wilcoxon signed-rank tests --- "
+        + group_label
+        + f" ($n={n}$ datasets). "
+        + r"$p$: nominal; $p_B$: Bonferroni-adjusted across "
+        + r"15 comparisons within this group. "
+        + r"$\Delta$: arithmetic mean G-mean difference "
+        + r"(Remedy 1 $-$ Remedy 2). "
+        + r"Zero differences are excluded from signed ranks. "
+        + r"$\ast$: $p<0.05$; $\ast\ast$: $p_B<0.05$."
     )
-    lines.append('\\caption{' + cap + '}')
-    lines.append('\\label{tab:wilcoxon_' + hyp.lower() + '}')
-    lines.append(r'\begin{tabular}{llrrrrl}')
-    lines.append(r'\toprule')
-    lines.append(
-        r'\textbf{Remedy 1} & \textbf{Remedy 2} & '
-        r'\textbf{$p$} & \textbf{$p_B$} & '
-        r'\textbf{$\Delta$} & \textbf{$r$} & \textbf{Sig.} \\\\'
-    )
-    lines.append(r'\midrule')
+
+    lines = [
+        r"\begin{table}[ht]",
+        r"\centering",
+        r"\scriptsize",
+        r"\caption{" + caption + "}",
+        r"\label{tab:wilcoxon_" + hyp.lower() + "}",
+        r"\begin{tabular}{llrrrl}",
+        r"\toprule",
+        r"\textbf{Remedy 1} & \textbf{Remedy 2} & "
+        r"\textbf{$p$} & \textbf{$p_B$} & "
+        r"\textbf{$\Delta$} & \textbf{Sig.} \\",
+        r"\midrule",
+    ]
 
     for _, row in df.iterrows():
-        if row['sig_bonferroni']:
-            sig_str = r'$\ast\ast$'
-            bf = lambda s: '\\textbf{' + str(s) + '}'
-        elif row['sig_nominal']:
-            sig_str = r'$\ast$'
-            bf = lambda s: str(s)
+        significant = bool(row["sig_bonferroni"])
+
+        if significant:
+            sig = r"$\ast\ast$"
+        elif row["sig_nominal"]:
+            sig = r"$\ast$"
         else:
-            sig_str = '---'
-            bf = lambda s: str(s)
+            sig = "---"
 
-        pv  = f"{row['p_value']:.4f}"
-        pb  = f"{row['p_bonf']:.4f}"
-        md  = f"{row['mean_diff']:+.4f}"
-        ef  = f"{row['effect_r']:.3f}"
-        r1  = row['Remedy_1']
-        r2  = row['Remedy_2']
-        row_str = (bf(r1) + " & " + bf(r2) + " & " +
-                   bf(pv) + " & " + bf(pb) + " & " +
-                   bf(md) + " & " + bf(ef) + " & " +
-                   sig_str + " \\\\")
-        lines.append("    " + row_str)
+        def emphasize(text):
+            return r"\textbf{" + text + "}" if significant else text
 
-    lines.append(r'\bottomrule')
-    lines.append(r'\end{tabular}')
-    lines.append(r'\end{table}')
+        cells = [
+            emphasize(row["Remedy_1"]),
+            emphasize(row["Remedy_2"]),
+            format_p(row["p_value"]),
+            format_p(row["p_bonf"]),
+            emphasize(f"{row['mean_diff']:+.4f}"),
+            sig,
+        ]
 
-    with open(tex_path, 'w') as f:
-        f.write('\n'.join(lines))
+        lines.append("    " + " & ".join(cells) + r" \\")
+
+    lines.extend([
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\end{table}",
+    ])
+
+    with open(tex_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
     print(f"Saved: {tex_path}")
+
 
 
 def main():
@@ -233,10 +289,11 @@ def main():
         if len(bonf_sig) > 0:
             print("  Bonferroni significant pairs:")
             for _, row in bonf_sig.iterrows():
-                print(f"    {row['Remedy_1']} vs {row['Remedy_2']}: "
-                      f"p_B={row['p_bonf']:.4f}, "
-                      f"delta={row['mean_diff']:+.4f}, "
-                      f"r={row['effect_r']:.3f}")
+                print(
+                    f"    {row['Remedy_1']} vs {row['Remedy_2']}: "
+                    f"p_B={row['p_bonf']:.4g}, "
+                    f"delta={row['mean_diff']:+.4f}"
+                )
 
 
 if __name__ == "__main__":

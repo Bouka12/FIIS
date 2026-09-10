@@ -22,6 +22,7 @@ import warnings
 import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
+import scipy
 from itertools import combinations
 
 warnings.filterwarnings('ignore')
@@ -72,37 +73,38 @@ def run_wilcoxon_group(pivot, group_label, classifier_name):
     for r1, r2 in combinations(REMEDY_ORDER, 2):
         x = pivot[r1].values
         y = pivot[r2].values
-        d = x - y
+        d = np.round(x - y, 4)
+        n_nonzero = int(np.count_nonzero(d))
 
         # Skip if all differences are zero
-        if np.all(d == 0):
+        if n_nonzero == 0:
             stat, p_val = np.nan, 1.0
         else:
-            try:
-                # Using alternative='two-sided' and zero_method='wilcox' as in original
-                stat, p_val = wilcoxon(x, y, alternative='two-sided',
-                                       zero_method='wilcox')
-            except Exception:
-                stat, p_val = np.nan, 1.0
+            
+            # Using alternative='two-sided' and zero_method='wilcox' as in original
+            result = wilcoxon(d, alternative='two-sided',
+                                       zero_method='wilcox', correction=False, method='auto')
+            stat, p_val = float(result.statistic), float(result.pvalue)
 
-        # Effect size: rank-biserial correlation
-        if not np.isnan(stat) and p_val < 1.0:
-            # Approximation r = Z / sqrt(n)
-            # Note: The original script had a slightly manual Z calculation
-            # We'll stick to the logic provided in the user's script
-            mu_w    = (n * (n + 1)) / 4
-            sig_w   = np.sqrt(n * (n + 1) * (2 * n + 1) / 24)
-            z       = (stat - mu_w) / sig_w if sig_w > 0 else 0
-            r_eff   = abs(z) / np.sqrt(n)
-        else:
-            r_eff = 0.0
+            if not np.isfinite(stat) or not np.isfinite(p_val):
+                raise ValueError(
+                    f"{classifier_name} - {group_label}: "
+                    f"invalid test result for {r1} versus {r2}."
+                )
+
 
         sig_bonf = p_val < ALPHA_BONF
         sig_nom  = p_val < ALPHA
 
         # Which remedy is better?
         mean_diff = np.mean(x - y)
-        better = REMEDY_LABELS[r1] if mean_diff > 0 else REMEDY_LABELS[r2]
+        if mean_diff > 0:
+            better = REMEDY_LABELS[r1]
+        elif mean_diff < 0:
+            better = REMEDY_LABELS[r2]
+        else:
+            better = 'Tie'
+        # better = REMEDY_LABELS[r1] if mean_diff > 0 else REMEDY_LABELS[r2]
 
         rows.append({
             'Classifier':   classifier_name,
@@ -115,9 +117,9 @@ def run_wilcoxon_group(pivot, group_label, classifier_name):
             'sig_nominal':  sig_nom,
             'sig_bonferroni': sig_bonf,
             'mean_diff':    round(mean_diff, 4),
-            'effect_r':     round(r_eff, 3),
             'better':       better,
             'n':            n,
+            'n_nonzero':    n_nonzero
         })
 
     df = pd.DataFrame(rows)
@@ -139,18 +141,17 @@ def make_latex_table(df, classifier_name, group_label, hyp, tex_path):
         group_label + ' ($n=' + str(n) + '$ datasets). '
         '$p$: nominal; $p_B$: Bonferroni-corrected '
         '($\\alpha_B=' + str(ab) + '$). '
-        '$r$: rank-biserial effect size. '
         '$\\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). '
         '$\\ast$: $p<0.05$; $\\ast\\ast$: $p_B<0.05$.'
     )
     lines.append('\\caption{' + cap + '}')
     lines.append('\\label{tab:wilcoxon_' + classifier_name.lower().replace(" ", "_") + '_' + hyp.lower() + '}')
-    lines.append(r'\begin{tabular}{llrrrrl}')
+    lines.append(r'\begin{tabular}{llrrrl}')
     lines.append(r'\toprule')
     lines.append(
         r'\textbf{Remedy 1} & \textbf{Remedy 2} & '
         r'\textbf{$p$} & \textbf{$p_B$} & '
-        r'\textbf{$\Delta$} & \textbf{$r$} & \textbf{Sig.} \\\\'
+        r'\textbf{$\Delta$} &  \textbf{Sig.} \\\\'
     )
     lines.append(r'\midrule')
 
@@ -168,12 +169,11 @@ def make_latex_table(df, classifier_name, group_label, hyp, tex_path):
         pv  = f"{row['p_value']:.4f}"
         pb  = f"{row['p_bonf']:.4f}"
         md  = f"{row['mean_diff']:+.4f}"
-        ef  = f"{row['effect_r']:.3f}"
         r1  = row['Remedy_1']
         r2  = row['Remedy_2']
         row_str = (bf(r1) + " & " + bf(r2) + " & " +
                    bf(pv) + " & " + bf(pb) + " & " +
-                   bf(md) + " & " + bf(ef) + " & " +
+                   bf(md) + " & " +
                    sig_str + " \\\\")
         lines.append("    " + row_str)
 

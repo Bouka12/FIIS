@@ -1,16 +1,16 @@
-Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,effect_r,better,n,group
-No Correction,Threshold Corr.,0.0,0.0,0.0,True,True,-0.186,0.841,Threshold Corr.,59,H1
-No Correction,ROS,4.0,0.0,0.0,True,True,-0.1149,0.837,ROS,59,H1
-No Correction,SMOTE,14.0,0.0,0.0,True,True,-0.1368,0.827,SMOTE,59,H1
-No Correction,Borderline SMOTE,41.0,0.0,0.0,True,True,-0.1177,0.8,Borderline SMOTE,59,H1
-No Correction,Class Weighting,39.0,0.0,0.0,True,True,-0.0885,0.802,Class Weighting,59,H1
-Threshold Corr.,ROS,58.0,0.0,0.0,True,True,0.0712,0.784,Threshold Corr.,59,H1
-Threshold Corr.,SMOTE,119.0,0.0,0.0,True,True,0.0493,0.724,Threshold Corr.,59,H1
-Threshold Corr.,Borderline SMOTE,34.0,0.0,0.0,True,True,0.0683,0.807,Threshold Corr.,59,H1
-Threshold Corr.,Class Weighting,16.0,0.0,0.0,True,True,0.0976,0.825,Threshold Corr.,59,H1
-ROS,SMOTE,291.5,7e-06,0.000112,True,True,-0.0219,0.554,SMOTE,59,H1
-ROS,Borderline SMOTE,710.0,0.186531,1.0,False,False,-0.0028,0.143,Borderline SMOTE,59,H1
-ROS,Class Weighting,14.0,0.0,0.0,True,True,0.0264,0.827,ROS,59,H1
-SMOTE,Borderline SMOTE,52.5,0.0,0.0,True,True,0.0191,0.789,SMOTE,59,H1
-SMOTE,Class Weighting,136.0,0.0,0.0,True,True,0.0483,0.707,SMOTE,59,H1
-Borderline SMOTE,Class Weighting,262.0,4e-06,6.5e-05,True,True,0.0292,0.583,Borderline SMOTE,59,H1
+Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,better,n,n_nonzero,group
+No Correction,Threshold Corr.,0.0,3.5054622489026254e-11,5.258193373353938e-10,True,True,-0.1884603448275862,Threshold Corr.,58,58,H1
+No Correction,ROS,6.0,4.796327819478128e-11,7.194491729217192e-10,True,True,-0.11627241379310344,ROS,58,58,H1
+No Correction,SMOTE,12.0,6.545449879352969e-11,9.818174819029453e-10,True,True,-0.13860344827586207,SMOTE,58,58,H1
+No Correction,Borderline SMOTE,58.0,6.634429161982089e-10,9.951643742973132e-09,True,True,-0.11824655172413795,Borderline SMOTE,58,58,H1
+No Correction,Class Weighting,38.0,2.461650131626648e-10,3.6924751974399717e-09,True,True,-0.08928620689655173,Class Weighting,58,58,H1
+Threshold Corr.,ROS,44.0,3.3223159052786055e-10,4.983473857917908e-09,True,True,0.07218793103448276,Threshold Corr.,58,58,H1
+Threshold Corr.,SMOTE,97.0,4.2903100167697695e-09,6.435465025154655e-08,True,True,0.049856896551724136,Threshold Corr.,58,58,H1
+Threshold Corr.,Borderline SMOTE,35.0,2.116449676323039e-10,3.1746745144845586e-09,True,True,0.07021379310344826,Threshold Corr.,58,58,H1
+Threshold Corr.,Class Weighting,16.0,8.047973259771141e-11,1.207195988965671e-09,True,True,0.0991741379310345,Threshold Corr.,58,58,H1
+ROS,SMOTE,273.0,6.485277937463354e-06,9.72791690619503e-05,True,True,-0.02233103448275863,SMOTE,58,58,H1
+ROS,Borderline SMOTE,678.0,0.16935728129482253,1.0,False,False,-0.001974137931034494,Borderline SMOTE,58,58,H1
+ROS,Class Weighting,11.0,9.212301435952344e-11,1.3818452153928517e-09,True,True,0.02698620689655172,ROS,58,57,H1
+SMOTE,Borderline SMOTE,80.0,1.9220844208188553e-09,2.883126631228283e-08,True,True,0.020356896551724138,SMOTE,58,58,H1
+SMOTE,Class Weighting,133.0,2.2206660417892703e-08,3.3309990626839056e-07,True,True,0.04931724137931035,SMOTE,58,58,H1
+Borderline SMOTE,Class Weighting,273.5,6.603610760464307e-06,9.905416140696461e-05,True,True,0.028960344827586214,Borderline SMOTE,58,58,H1

@@ -50,7 +50,13 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
-
+plt.rcParams.update({
+    'font.family': 'serif',
+    'font.size': 10,
+    'axes.linewidth': 0.8,
+    'mathtext.fontset': 'cm',   # renders $...$ math in Computer Modern, matching LaTeX
+    'legend.frameon': False,    # optional: cleaner legend box, common in papers
+})
 # ─────────────────────────────────────────────
 # Configuration
 # ─────────────────────────────────────────────
@@ -422,7 +428,7 @@ def plot_R_vs_Rn_wc(df, out_path):
     fig.patch.set_facecolor(BG)
     ax.set_facecolor(BG)
  
-    log_Rn    = df['fiis_log_Rn'].values
+    log_Rn    = np.log(df['fiis_R_n'].values)
     log_R     = np.log(df['fiis_R'].values)
     DOT_COLOR = '#2E86AB'   # single neutral color, no archetype coding
  
@@ -648,7 +654,7 @@ def main():
     print(f"Loaded {len(df)} datasets | "
           f"IR: {df['IR'].min():.2f}–{df['IR'].max():.2f} | "
           f"Sources: {df['source'].value_counts().to_dict()}")
-    print(f"Dominant: {df['fiis_dominant'].value_counts().to_dict()}")
+    # print(f"Dominant: {df['fiis_dominant'].value_counts().to_dict()}")
     
     # 0. Real Data Characterization
     SAVING_DIR = os.path.join(RESULTS_DIR, "charcterization_results")
@@ -662,18 +668,18 @@ def main():
     )
 
     # 2. FIIS components
-    make_fiis_table(
-        df,
-        tex_path=os.path.join(SAVING_DIR, 'table_fiis_components.tex'),
-        csv_path=os.path.join(SAVING_DIR, 'table_fiis_components.csv'),
-    )
+    # make_fiis_table(
+    #     df,
+    #     tex_path=os.path.join(SAVING_DIR, 'table_fiis_components.tex'),
+    #     csv_path=os.path.join(SAVING_DIR, 'table_fiis_components.csv'),
+    # )
 
 
     # 3. Strip plot
-    plot_fiis_strip(
-        df,
-        os.path.join(SAVING_DIR, 'plot_fiis_strip.png'),
-    )
+    # plot_fiis_strip(
+    #     df,
+    #     os.path.join(SAVING_DIR, 'plot_fiis_strip.png'),
+    # )
 
     # 4. R vs Rn scatter
     plot_R_vs_Rn(

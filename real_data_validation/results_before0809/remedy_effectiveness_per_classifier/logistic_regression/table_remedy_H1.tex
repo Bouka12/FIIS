@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{Remedy effectiveness for logistic_regression — H1: Archetype A + Deficiency. Averaged across 30 CV runs. Friedman: $\chi^2_F = 124.678$, $p < 0.001$. CD$=0.982$ ($\alpha=0.05$). Average rank (lower = better).}
+\label{tab:remedy_logistic_regression_h1}
+\small
+\begin{tabular}{lrr}
+\toprule
+\textbf{Remedy} & \textbf{Avg.\ Rank} & \textbf{G-mean} \\
+\midrule
+    Threshold Corr. & 2.508 & $0.8522 \pm 0.0913$ \\
+    SMOTE & 2.822 & $0.8488 \pm 0.0972$ \\
+    Class Weighting & 3.093 & $0.8486 \pm 0.0943$ \\
+    ROS & 3.169 & $0.8485 \pm 0.0951$ \\
+    Borderline SMOTE & 3.525 & $0.8416 \pm 0.0983$ \\
+    No Correction & 5.881 & $0.6289 \pm 0.2548$ \\
+\midrule
+\multicolumn{3}{l}{\footnotesize Friedman: $\chi^2_F=124.678$, $p < 0.001$, CD$=0.982$} \\
+\bottomrule
+\end{tabular}
+\end{table}

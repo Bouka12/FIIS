@@ -1,16 +1,16 @@
-Classifier,Group,Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,effect_r,better,n
-random_forest,H1,No Correction,Threshold Corr.,23.5,0.0,0.0,True,True,-0.193,0.847,Threshold Corr.,59
-random_forest,H1,No Correction,ROS,191.5,0.0,7e-06,True,True,-0.0532,0.681,ROS,59
-random_forest,H1,No Correction,SMOTE,56.0,0.0,0.0,True,True,-0.1036,0.815,SMOTE,59
-random_forest,H1,No Correction,Borderline SMOTE,285.0,1e-05,0.00015,True,True,-0.069,0.59,Borderline SMOTE,59
-random_forest,H1,No Correction,Class Weighting,337.0,6e-05,0.000894,True,True,0.0272,0.538,No Correction,59
-random_forest,H1,Threshold Corr.,ROS,91.0,0.0,0.0,True,True,0.1397,0.78,Threshold Corr.,59
-random_forest,H1,Threshold Corr.,SMOTE,161.0,0.0,1e-06,True,True,0.0894,0.711,Threshold Corr.,59
-random_forest,H1,Threshold Corr.,Borderline SMOTE,62.0,0.0,0.0,True,True,0.124,0.809,Threshold Corr.,59
-random_forest,H1,Threshold Corr.,Class Weighting,27.0,0.0,0.0,True,True,0.2202,0.843,Threshold Corr.,59
-random_forest,H1,ROS,SMOTE,229.0,2e-06,3.1e-05,True,True,-0.0503,0.645,SMOTE,59
-random_forest,H1,ROS,Borderline SMOTE,650.0,0.111598,1.0,False,False,-0.0157,0.231,Borderline SMOTE,59
-random_forest,H1,ROS,Class Weighting,3.0,0.0,0.0,True,True,0.0805,0.867,ROS,59
-random_forest,H1,SMOTE,Borderline SMOTE,53.5,0.0,0.0,True,True,0.0346,0.817,SMOTE,59
-random_forest,H1,SMOTE,Class Weighting,67.0,0.0,0.0,True,True,0.1308,0.804,SMOTE,59
-random_forest,H1,Borderline SMOTE,Class Weighting,145.0,0.0,0.0,True,True,0.0962,0.727,Borderline SMOTE,59
+Classifier,Group,Remedy_1,Remedy_2,W_stat,p_value,p_bonf,sig_nominal,sig_bonferroni,mean_diff,better,n,n_nonzero
+random_forest,H1,No Correction,Threshold Corr.,20.0,0.0,0.0,True,True,-0.1951,Threshold Corr.,58,58
+random_forest,H1,No Correction,ROS,180.0,0.0,7e-06,True,True,-0.0537,ROS,58,56
+random_forest,H1,No Correction,SMOTE,56.0,0.0,0.0,True,True,-0.1047,SMOTE,58,57
+random_forest,H1,No Correction,Borderline SMOTE,275.5,1.2e-05,0.00018,True,True,-0.0675,Borderline SMOTE,58,57
+random_forest,H1,No Correction,Class Weighting,315.0,4.8e-05,0.000724,True,True,0.0285,No Correction,58,57
+random_forest,H1,Threshold Corr.,ROS,73.5,0.0,0.0,True,True,0.1414,Threshold Corr.,58,58
+random_forest,H1,Threshold Corr.,SMOTE,145.5,0.0,1e-06,True,True,0.0904,Threshold Corr.,58,58
+random_forest,H1,Threshold Corr.,Borderline SMOTE,56.0,0.0,0.0,True,True,0.1276,Threshold Corr.,58,58
+random_forest,H1,Threshold Corr.,Class Weighting,21.0,0.0,0.0,True,True,0.2236,Threshold Corr.,58,58
+random_forest,H1,ROS,SMOTE,215.5,1e-06,1.8e-05,True,True,-0.051,SMOTE,58,57
+random_forest,H1,ROS,Borderline SMOTE,628.5,0.115682,1.0,False,False,-0.0138,Borderline SMOTE,58,57
+random_forest,H1,ROS,Class Weighting,3.0,0.0,0.0,True,True,0.0822,ROS,58,57
+random_forest,H1,SMOTE,Borderline SMOTE,85.0,0.0,0.0,True,True,0.0372,SMOTE,58,57
+random_forest,H1,SMOTE,Class Weighting,70.0,0.0,0.0,True,True,0.1332,SMOTE,58,58
+random_forest,H1,Borderline SMOTE,Class Weighting,148.0,0.0,1e-06,True,True,0.096,Borderline SMOTE,58,58

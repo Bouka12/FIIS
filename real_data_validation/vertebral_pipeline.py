@@ -239,9 +239,7 @@ def main():
     X = df.drop(columns=['Outcome']).values.astype(float)
     y = df['Outcome'].values.astype(int)
 
-    # Standardise
-    scaler = StandardScaler()
-    X      = scaler.fit_transform(X)
+
 
     n0 = (y == 0).sum(); n1 = (y == 1).sum()
     IR = n0 / n1
@@ -262,6 +260,11 @@ def main():
         X_tr, X_te = X[tr_idx], X[te_idx]
         y_tr, y_te = y[tr_idx], y[te_idx]
 
+        # Standardise
+        scaler = StandardScaler()
+        X_tr      = scaler.fit_transform(X_tr)
+        X_te      = scaler.transform(X_te)
+        
         # FIIS — once per fold
         fiis = compute_fiis(X_tr, y_tr, seed=seed)
 

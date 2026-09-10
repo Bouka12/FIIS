@@ -38,7 +38,13 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from scipy.stats import friedmanchisquare
 from itertools import combinations
-
+plt.rcParams.update({
+    'font.family': 'serif',
+    'font.size': 10,
+    'axes.linewidth': 0.8,
+    'mathtext.fontset': 'cm',   # renders $...$ math in Computer Modern, matching LaTeX
+    'legend.frameon': False,    # optional: cleaner legend box, common in papers
+})
 warnings.filterwarnings('ignore')
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results")
@@ -516,7 +522,7 @@ def plot_delta_gmean_per_classifier(agg_data, classifier_name, out_path):
 def main():
     raw_path  = os.path.join(RESULTS_DIR, 'real_data_raw.csv')
     arch_path = os.path.join(RESULTS_DIR,
-                             'archetype_discovery', 'archetype_discovery.csv')
+                             'archetype_discovery_noB', 'archetype_discovery.csv')
 
     if not os.path.exists(raw_path) or not os.path.exists(arch_path):
         print(f"Error: Could not find input files at {raw_path} or {arch_path}")

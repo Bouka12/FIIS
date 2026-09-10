@@ -1,0 +1,27 @@
+\begin{table}[ht]
+\centering
+\scriptsize
+\caption{Pairwise Wilcoxon signed-rank tests for xgboost --- H2: Archetype C + Deficiency ($n=24$ datasets). $p$: nominal; $p_B$: Bonferroni-corrected ($\alpha_B=0.0033$). $r$: rank-biserial effect size. $\Delta$: mean G-mean difference (Remedy 1 $-$ Remedy 2). $\ast$: $p<0.05$; $\ast\ast$: $p_B<0.05$.}
+\label{tab:wilcoxon_xgboost_h2}
+\begin{tabular}{llrrrrl}
+\toprule
+\textbf{Remedy 1} & \textbf{Remedy 2} & \textbf{$p$} & \textbf{$p_B$} & \textbf{$\Delta$} & \textbf{$r$} & \textbf{Sig.} \\\\
+\midrule
+    \textbf{No Correction} & \textbf{Threshold Corr.} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.1516} & \textbf{0.875} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{ROS} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.0595} & \textbf{0.869} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.1014} & \textbf{0.869} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{Borderline SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.0870} & \textbf{0.869} & $\ast\ast$ \\
+    \textbf{No Correction} & \textbf{Class Weighting} & \textbf{0.0000} & \textbf{0.0000} & \textbf{-0.0596} & \textbf{0.869} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{ROS} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0921} & \textbf{0.875} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0502} & \textbf{0.875} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{Borderline SMOTE} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0646} & \textbf{0.875} & $\ast\ast$ \\
+    \textbf{Threshold Corr.} & \textbf{Class Weighting} & \textbf{0.0000} & \textbf{0.0000} & \textbf{+0.0920} & \textbf{0.869} & $\ast\ast$ \\
+    \textbf{ROS} & \textbf{SMOTE} & \textbf{0.0010} & \textbf{0.0144} & \textbf{-0.0419} & \textbf{0.642} & $\ast\ast$ \\
+    \textbf{ROS} & \textbf{Borderline SMOTE} & \textbf{0.0015} & \textbf{0.0222} & \textbf{-0.0276} & \textbf{0.679} & $\ast\ast$ \\
+    ROS & Class Weighting & 0.5633 & 1.0000 & -0.0001 & 0.181 & --- \\
+    SMOTE & Borderline SMOTE & 0.0696 & 1.0000 & +0.0143 & 0.370 & --- \\
+    SMOTE & Class Weighting & 0.0064 & 0.0954 & +0.0418 & 0.557 & $\ast$ \\
+    Borderline SMOTE & Class Weighting & 0.0043 & 0.0650 & +0.0275 & 0.566 & $\ast$ \\
+\bottomrule
+\end{tabular}
+\end{table}
