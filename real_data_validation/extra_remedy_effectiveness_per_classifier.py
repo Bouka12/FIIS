@@ -251,41 +251,53 @@ def make_rank_table_per_classifier(res, classifier_name, hyp_group, tex_path, cs
 # ─────────────────────────────────────────────
 
 def plot_cd_diagram_per_classifier(res, classifier_name, hyp_group, out_path):
-    if res is None: return
+    if res is None:
+        return
 
-    avg_ranks = res['avg_ranks']
-    cd        = res['cd']
-    n         = res['n']
-    k         = res['k']
+    avg_ranks = np.asarray(res['avg_ranks'], dtype=float)
+    cd = float(res['cd'])
+    k = int(res['k'])
 
-    order    = np.argsort(avg_ranks)
-    s_ranks  = avg_ranks[order]
-    s_keys   = [REMEDY_ORDER[i] for i in order]
-    s_labels = [REMEDY_LABELS[kk] for kk in s_keys]
+    order = np.argsort(avg_ranks, kind='stable')
+    s_ranks = avg_ranks[order]
+    s_labels = [REMEDY_LABELS[REMEDY_ORDER[i]] for i in order]
 
-    half      = k // 2
-    left_idx  = list(range(half))
+    half = k // 2
+    left_idx = list(range(half))
     right_idx = list(range(half, k))
 
-    # Non-significant cliques
-    cliques = []
-    for i in range(k):
-        for j in range(i+1, k):
-            if abs(s_ranks[i] - s_ranks[j]) <= cd:
-                merged = False
-                for cl in cliques:
-                    if i in cl or j in cl:
-                        cl.update([i,j]); merged=True; break
-                if not merged:
-                    cliques.append({i,j})
-    final_cliques = []
-    for cl in cliques:
-        found = False
-        for mcl in final_cliques:
-            if cl & mcl:
-                mcl.update(cl); found=True; break
-        if not found:
-            final_cliques.append(set(cl))
+    # Every pair within a clique must satisfy the CD criterion.
+    candidates = []
+    for i in range(k - 1):
+        j = i
+        while j + 1 < k and s_ranks[j + 1] - s_ranks[i] <= cd:
+            j += 1
+        if j > i:
+            candidates.append(set(range(i, j + 1)))
+
+    # Keep maximal cliques; do not merge overlapping cliques.
+    final_cliques = [
+        cl for cl in candidates
+        if not any(cl < other for other in candidates)
+    ]
+
+    ax_y = 0.0
+    step = 0.70
+    lbl_gap = 0.15
+
+    clique_ys = [
+        ax_y - 0.35 - 0.25 * i
+        for i in range(len(final_cliques))
+    ]
+
+    # All vertical connectors extend below all clique bars.
+    first_label_y = ax_y - step
+    if clique_ys:
+        first_label_y = min(first_label_y, min(clique_ys) - 0.35)
+
+    lowest_label_y = first_label_y - step * (
+        max(len(left_idx), len(right_idx)) - 1
+    )
 
     fig, ax = plt.subplots(figsize=(10, 4))
     fig.patch.set_facecolor(BG)
@@ -295,76 +307,112 @@ def plot_cd_diagram_per_classifier(res, classifier_name, hyp_group, out_path):
     rank_min = s_ranks[0] - 0.3
     rank_max = s_ranks[-1] + 0.3
     ax.set_xlim(rank_min - 2.5, rank_max + 2.5)
-    ax.set_ylim(-4.5, 2.8)
+    ax.set_ylim(min(-4.5, lowest_label_y - 0.5), 2.8)
 
-    ax_y = 0.0; step = 0.70; lbl_gap = 0.15
+    ax.plot(
+        [rank_min, rank_max], [ax_y, ax_y],
+        color='black', linewidth=1.5, zorder=3
+    )
 
-    ax.plot([rank_min, rank_max], [ax_y, ax_y],
-            color='black', linewidth=1.5, zorder=3)
-    # Rank ticks and labels
+    # Rank ticks and staggered labels.
     label_y_base = ax_y + 0.22
     label_y_high = ax_y + 0.48
-
-    # Minimum horizontal separation required between labels
     min_label_sep = 0.28
-
-    label_y = []
     last_x = -np.inf
     current_level = 0
 
     for r in s_ranks:
-        ax.plot([r, r], [ax_y - 0.1, ax_y + 0.1],
-                color='black', linewidth=1.2, zorder=3)
+        ax.plot(
+            [r, r], [ax_y - 0.1, ax_y + 0.1],
+            color='black', linewidth=1.2, zorder=3
+        )
 
-        # If the rank is too close to the previous one, move the label upward
         if r - last_x < min_label_sep:
             current_level = 1 - current_level
         else:
             current_level = 0
 
         y = label_y_high if current_level else label_y_base
-        label_y.append(y)
-
-        ax.text(r, y, f'{r:.2f}',
-                ha='center', va='bottom', fontsize=7.5)
-
+        ax.text(
+            r, y, f'{r:.2f}',
+            ha='center', va='bottom', fontsize=7.5
+        )
         last_x = r
 
-    # CD bar
+    # CD bar.
     best = s_ranks[0]
-    ax.annotate('', xy=(best+cd, 2.2), xytext=(best, 2.2),
-                arrowprops=dict(arrowstyle='<->', color='black',
-                                lw=1.5, mutation_scale=10))
-    ax.text((best*2+cd)/2, 2.42, 'CD',
-            ha='center', va='bottom', fontsize=9)
+    ax.annotate(
+        '',
+        xy=(best + cd, 2.2),
+        xytext=(best, 2.2),
+        arrowprops=dict(
+            arrowstyle='<->',
+            color='black',
+            lw=1.5,
+            mutation_scale=10
+        )
+    )
+    ax.text(
+        best + cd / 2, 2.42, 'CD',
+        ha='center', va='bottom', fontsize=9
+    )
 
-    # Left labels (best→worst, shallowest→deepest)
+    # Left labels.
     label_x_left = rank_min - 0.15
     for pos, i in enumerate(left_idx):
-        rank  = s_ranks[i]; label = s_labels[i]
-        line_y = ax_y - step*(pos+1)
-        ax.plot([rank,rank], [ax_y, line_y], color='black', lw=1.0, zorder=2)
-        ax.plot([label_x_left,rank], [line_y,line_y], color='black', lw=1.0)
-        ax.text(label_x_left-lbl_gap, line_y, label,
-                ha='right', va='center', fontsize=8.5)
+        rank = s_ranks[i]
+        line_y = first_label_y - step * pos
 
-    # Right labels (worst→best, shallowest→deepest)
+        ax.plot(
+            [rank, rank, label_x_left],
+            [ax_y, line_y, line_y],
+            color='black', lw=1.0, zorder=2
+        )
+        ax.text(
+            label_x_left - lbl_gap, line_y, s_labels[i],
+            ha='right', va='center', fontsize=8.5
+        )
+
+    # Right labels.
     label_x_right = rank_max + 0.15
     for pos, i in enumerate(reversed(right_idx)):
-        rank  = s_ranks[i]; label = s_labels[i]
-        line_y = ax_y - step*(pos+1)
-        ax.plot([rank,rank], [ax_y, line_y], color='black', lw=1.0, zorder=2)
-        ax.plot([rank,label_x_right], [line_y,line_y], color='black', lw=1.0)
-        ax.text(label_x_right+lbl_gap, line_y, label,
-                ha='left', va='center', fontsize=8.5)
+        rank = s_ranks[i]
+        line_y = first_label_y - step * pos
 
-    # Clique bars
-    cy = ax_y - 0.35
-    for cl in final_cliques:
-        cl_ranks = [s_ranks[j] for j in sorted(cl)]
-        ax.plot([min(cl_ranks), max(cl_ranks)], [cy,cy],
-                color='black', linewidth=4, solid_capstyle='butt', zorder=5)
-        cy -= 0.25
+        ax.plot(
+            [rank, rank, label_x_right],
+            [ax_y, line_y, line_y],
+            color='black', lw=1.0, zorder=2
+        )
+        ax.text(
+            label_x_right + lbl_gap, line_y, s_labels[i],
+            ha='left', va='center', fontsize=8.5
+        )
+
+    # Draw overlapping cliques on separate rows.
+    for cl, cy in zip(final_cliques, clique_ys):
+        indices = sorted(cl)
+        lo = s_ranks[indices[0]]
+        hi = s_ranks[indices[-1]]
+
+        ax.plot(
+            [lo, hi], [cy, cy],
+            color='black',
+            linewidth=4,
+            solid_capstyle='round',
+            zorder=5
+        )
+
+        # Keep cliques with nearly identical ranks visible.
+        if hi - lo < 0.03:
+            ax.plot(
+                [(lo + hi) / 2], [cy],
+                marker='o',
+                markersize=4,
+                color='black',
+                linestyle='none',
+                zorder=6
+            )
 
     fig.suptitle(
         f'CD Diagram — {classifier_name} - {GROUP_LABELS[hyp_group]}\n'
@@ -372,10 +420,10 @@ def plot_cd_diagram_per_classifier(res, classifier_name, hyp_group, out_path):
         r'bars: not significantly different',
         fontsize=9, color='black', y=1.01
     )
-    plt.savefig(out_path, dpi=160, bbox_inches='tight', facecolor=BG)
-    plt.close()
-    print(f"Saved: {out_path}")
 
+    fig.savefig(out_path, dpi=160, bbox_inches='tight', facecolor=BG)
+    plt.close(fig)
+    print(f'Saved: {out_path}')
 
 # ─────────────────────────────────────────────
 # Violin plot per classifier and hypothesis group
@@ -562,7 +610,7 @@ def main():
             if res is not None:
                 plot_cd_diagram_per_classifier(
                     res, classifier, hyp,
-                    os.path.join(classifier_out_dir, f'plot_cd_{hyp}.png')
+                    os.path.join(classifier_out_dir, f'modified_plot_cd_{hyp}.png')
                 )
 
         print("\nStep 3 — Violin plot per classifier and hypothesis group...")

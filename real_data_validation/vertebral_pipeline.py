@@ -28,15 +28,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix
-
 from imblearn.over_sampling import SMOTE, RandomOverSampler, BorderlineSMOTE
-
 try:
     from xgboost import XGBClassifier
     XGBOOST_AVAILABLE = True
 except ImportError:
     XGBOOST_AVAILABLE = False
-
 warnings.filterwarnings('ignore')
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results", "vertebral")
@@ -46,7 +43,6 @@ N_SPLITS  = 5
 N_REPEATS = 6     # 30 runs total
 SEED      = 42
 EPSILON   = 0.05  # compensation threshold
-
 
 # ─────────────────────────────────────────────
 # Classifiers
@@ -65,7 +61,6 @@ def get_classifiers(seed=SEED):
             eval_metric='logloss', verbosity=0,
             use_label_encoder=False)
     return clfs
-
 
 def clone_classifier(clf, seed):
     params = clf.get_params()

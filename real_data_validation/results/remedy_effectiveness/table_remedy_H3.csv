@@ -1,7 +1,7 @@
 Remedy,Avg_Rank,G_mean,G_mean_std
-Threshold Corr.,2.364,0.9612,0.0325
+Threshold Correction,2.364,0.9612,0.0325
 SMOTE,2.455,0.956,0.0368
 ROS,3.364,0.9524,0.0416
-Borderline SMOTE,3.591,0.9489,0.0461
+BorderlineSMOTE,3.591,0.9489,0.0461
 Class Weighting,4.0,0.9477,0.0457
 No Correction,5.227,0.9381,0.0478
